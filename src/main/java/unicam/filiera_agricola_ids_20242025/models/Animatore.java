@@ -13,6 +13,7 @@ public class Animatore {
     @JsonIgnore
     private int idAnimatore;
 
+
     //aggiungere dati di login
 
     @OneToMany
@@ -29,4 +30,6 @@ public class Animatore {
     public void setEventiCreati(List<Evento> eventiCreati) {
         this.eventiCreati = eventiCreati;
     }
+
+
 }

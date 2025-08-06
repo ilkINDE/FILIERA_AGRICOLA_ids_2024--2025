@@ -26,15 +26,18 @@ public class Evento {
 
     private int postiDisponibili;
 
+    private String indirizzo;
+
     public Evento() {}
 
-    public Evento(int id, String nome, int maxPartecipanti, Date data, String descrizione, int postiDisponibili) {
+    public Evento(int id, String nome, int maxPartecipanti, Date data, String descrizione, int postiDisponibili, String indirizzo) {
         this.id = id;
         this.nome = nome;
         this.maxPartecipanti = maxPartecipanti;
         this.data = data;
         this.descrizione = descrizione;
         this.postiDisponibili = maxPartecipanti;
+        this.indirizzo = indirizzo;
     }
 
     public int getId() {
@@ -67,6 +70,12 @@ public class Evento {
     }
 
 
+    public String getIndirizzo() {
+        return indirizzo;
+    }
+
+
+
     public void setId(int id) {
         this.id = id;
     }
@@ -95,4 +104,12 @@ public class Evento {
     public void setPostiDisponibili(int postiDisponibili) {
         this.postiDisponibili = postiDisponibili;
     }
+
+
+    public void setIndirizzo(String indirizzo) {
+        this.indirizzo = indirizzo;
+    }
+
+
+
 }
