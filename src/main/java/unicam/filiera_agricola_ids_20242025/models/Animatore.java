@@ -13,7 +13,6 @@ public class Animatore {
     @JsonIgnore
     private int idAnimatore;
 
-
     //aggiungere dati di login
 
     @OneToMany

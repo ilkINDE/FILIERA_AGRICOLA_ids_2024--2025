@@ -2,26 +2,43 @@ package unicam.filiera_agricola_ids_20242025.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import unicam.filiera_agricola_ids_20242025.Services.HandlerAnimatore;
 import unicam.filiera_agricola_ids_20242025.models.Animatore;
+import unicam.filiera_agricola_ids_20242025.models.Evento;
 import unicam.filiera_agricola_ids_20242025.repository.AnimatoreRepository;
 
 @RestController
-@RequestMapping("/animatore")
+@RequestMapping("/animatori")
 public class AnimatoreController {
     private final AnimatoreRepository animatoreRepository;
+    private final HandlerAnimatore handlerAnimatore;
 
     @Autowired
-    public AnimatoreController(AnimatoreRepository animatoreRepository) {
+    public AnimatoreController(AnimatoreRepository animatoreRepository, HandlerAnimatore handlerAnimatore) {
         this.animatoreRepository = animatoreRepository;
+        this.handlerAnimatore = handlerAnimatore;
     }
 
-    @PostMapping("/aggiungi")
-    public ResponseEntity<Animatore> add(@RequestBody Animatore animatore) {
-        animatoreRepository.save(animatore);
-        return ResponseEntity.ok(animatore);
+    @PostMapping("/crea-evento")
+    public ResponseEntity<String> creaEvento(@RequestBody Evento evento, @PathVariable int idAnimatore) {
+
+        handlerAnimatore.creaEvento(
+                idAnimatore,
+                evento.getNome(),
+                evento.getDescrizione(),
+                evento.getIndirizzo(),
+                evento.getData(),
+                evento.getMaxPartecipanti());
+
+        return ResponseEntity.ok().body( evento + " creato.");
     }
+
+    @DeleteMapping("/eventiCreati/{idEvento}/eliminaEvento/")
+    public ResponseEntity<String> eliminaEvento(@PathVariable int idEvento, @PathVariable int idAnimatore){
+
+        handlerAnimatore.eliminaEvento(idEvento, idAnimatore);
+        return ResponseEntity.ok().body(" evento eliminato. ");
+    }
+
 }

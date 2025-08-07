@@ -24,9 +24,9 @@ public class HandlerAnimatore {
         this.eventoRepository = eventoRepository;
     }
 
-    public void creaEvento(int id, String nome, String descrizione, String indirizzo, Date data, int maxPartecipanti) {
+    public void creaEvento(int idAnimatore, String nome, String descrizione, String indirizzo, Date data, int maxPartecipanti) {
 
-        Animatore animatore = animatoreRepository.findById(id)
+        Animatore animatore = animatoreRepository.findById(idAnimatore)
                 .orElseThrow(() -> new RuntimeException("Animatore non trovato"));
 
 
@@ -43,9 +43,20 @@ public class HandlerAnimatore {
         eventoRepository.save(nuovoEvento);
     }
 
-
     public void caricaEvento() {
-
     }
 
+    public void eliminaEvento(int idEvento, int idAnimatore) {
+
+        Animatore animatore = animatoreRepository.findById(idAnimatore).
+                orElseThrow(() -> new RuntimeException("Animatore inesistente"));
+
+        Evento evento = eventoRepository.findById(idEvento).
+                orElseThrow(() -> new RuntimeException("Evento inesistente"));
+
+        if (animatore.getEventiCreati().contains(evento)) {
+            animatore.getEventiCreati().remove(evento);
+            eventoRepository.delete(evento);
+        }
+    }
 }
