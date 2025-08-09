@@ -8,6 +8,8 @@ import unicam.filiera_agricola_ids_20242025.models.Animatore;
 import unicam.filiera_agricola_ids_20242025.models.Evento;
 import unicam.filiera_agricola_ids_20242025.repository.AnimatoreRepository;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/animatori")
 public class AnimatoreController {
@@ -34,7 +36,36 @@ public class AnimatoreController {
         return ResponseEntity.ok().body( evento + " creato.");
     }
 
-    @DeleteMapping("/eventiCreati/{idEvento}/eliminaEvento/")
+
+
+    @PutMapping("/{idAnimatore}/eventiCreati/{idEvento}/modifica")
+    public ResponseEntity<String> modificaEvento(@PathVariable int idAnimatore, @PathVariable int idEvento, @RequestBody Evento eventoModificato) {
+
+        handlerAnimatore.modificaEvento(
+                idAnimatore,
+                idEvento,
+                eventoModificato.getNome(),
+                eventoModificato.getDescrizione(),
+                eventoModificato.getIndirizzo(),
+                eventoModificato.getData(),
+                eventoModificato.getMaxPartecipanti()
+        );
+
+        return ResponseEntity.ok("Evento modificato con successo.");
+    }
+
+
+    @GetMapping("/{idAnimatore}/eventiCreati")
+    public ResponseEntity<List<Evento>> getEventiCreati(@PathVariable int idAnimatore) {
+        Animatore animatore = animatoreRepository.findById(idAnimatore)
+                .orElseThrow(() -> new RuntimeException("Animatore non trovato"));
+
+        List<Evento> eventiCreati = animatore.getEventiCreati();
+
+        return ResponseEntity.ok(eventiCreati);
+    }
+
+    @DeleteMapping("/{idAnimatore}/eventiCreati/{idEvento}/eliminaEvento/")
     public ResponseEntity<String> eliminaEvento(@PathVariable int idEvento, @PathVariable int idAnimatore){
 
         handlerAnimatore.eliminaEvento(idEvento, idAnimatore);

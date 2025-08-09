@@ -52,6 +52,7 @@ public class HandlerAnimatore {
     }
 
     public void caricaEvento() {
+        //TODO
     }
 
 
