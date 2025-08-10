@@ -13,6 +13,8 @@ public class Animatore {
     @JsonIgnore
     private int idAnimatore;
 
+    private String nome;
+    private String cognome;
     //aggiungere dati di login
 
     @OneToMany
@@ -22,6 +24,11 @@ public class Animatore {
     public Animatore() {}
 
 
+    public Animatore(String Nome , String Cognome) {
+        this.nome = Nome;
+        this.cognome = Cognome;
+    }
+
     public List<Evento> getEventiCreati() {
         return eventiCreati;
     }
@@ -30,5 +37,19 @@ public class Animatore {
         this.eventiCreati = eventiCreati;
     }
 
+    public String getNome() {
+        return nome;
+    }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCognome() {
+        return cognome;
+    }
+
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
+    }
 }

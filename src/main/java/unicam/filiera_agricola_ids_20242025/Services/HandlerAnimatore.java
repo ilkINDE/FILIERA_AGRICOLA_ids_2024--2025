@@ -9,6 +9,7 @@ import unicam.filiera_agricola_ids_20242025.repository.AnimatoreRepository;
 import unicam.filiera_agricola_ids_20242025.repository.EventoRepository;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class HandlerAnimatore {
@@ -24,9 +25,8 @@ public class HandlerAnimatore {
         this.eventoRepository = eventoRepository;
     }
 
+    //gli eventi creati dall'animatore sono modificabli o eliminabili finchè non vengono ufficialmente caricati nella piattaforma
     public void creaEvento(int idAnimatore, String nome, String descrizione, String indirizzo, Date data, int maxPartecipanti) {
-
-
 
         Animatore animatore = animatoreRepository.findById(idAnimatore)
                 .orElseThrow(() -> new RuntimeException("Animatore non trovato"));
@@ -51,12 +51,6 @@ public class HandlerAnimatore {
         eventoRepository.save(nuovoEvento);
     }
 
-    public void caricaEvento() {
-        //TODO
-    }
-
-
-
     public void modificaEvento(int idAnimatore, int idEvento, String nuovoNome, String nuovaDescrizione, String nuovoIndirizzo, Date nuovaData, int nuovoMaxPartecipanti) {
 
         // Recupera l'animatore
@@ -72,15 +66,14 @@ public class HandlerAnimatore {
             throw new RuntimeException("L'evento non appartiene a questo animatore.");
         }
 
-        // Verifica disponibilità del luogo e data (escludendo l'evento stesso)
-        boolean disponibile = eventoRepository.findAll().stream()
-                .filter(e -> e.getId() != evento.getId()) // esclude l'evento stesso
-                .noneMatch(e ->
-                        e.getIndirizzo().equalsIgnoreCase(nuovoIndirizzo) &&
-                                e.getData().equals(nuovaData)
-                );
+        // Verifica se l'evento è già stato caricato sulla piattaforma
+        if (evento.isCaricato()) {
+            throw new RuntimeException("Evento già caricato sulla piattaforma: non modificabile.");
+        }
 
-        if (!disponibile) {
+        // Verifica disponibilità del luogo e data (escludendo l'evento stesso)
+        List<Evento> conflitti = eventoRepository.findConflitti(nuovoIndirizzo, nuovaData, evento.getId());
+        if (!conflitti.isEmpty()) {
             throw new RuntimeException("Il luogo non è disponibile alla data selezionata.");
         }
 
@@ -97,19 +90,49 @@ public class HandlerAnimatore {
 
     }
 
-
-
     public void eliminaEvento(int idEvento, int idAnimatore) {
 
+        // Recupera l'animatore
         Animatore animatore = animatoreRepository.findById(idAnimatore).
                 orElseThrow(() -> new RuntimeException("Animatore inesistente"));
 
+        // Recupera l'evento da eliminare
         Evento evento = eventoRepository.findById(idEvento).
                 orElseThrow(() -> new RuntimeException("Evento inesistente"));
 
-        if (animatore.getEventiCreati().contains(evento)) {
-            animatore.getEventiCreati().remove(evento);
-            eventoRepository.delete(evento);
+        // Verifica che l'evento appartenga all'animatore
+        if (!animatore.getEventiCreati().contains(evento)) {
+            throw new RuntimeException("L'evento non appartiene a questo animatore.");
         }
+        if (evento.isCaricato()) {
+            throw new RuntimeException("Evento già caricato sulla piattaforma, non eliminabile.");
+        }
+
+        animatore.getEventiCreati().remove(evento);
+        eventoRepository.delete(evento);
+    }
+
+    //una volta caricato l'evento non potrà più essere modificato o eliminato
+    public void caricaEvento(int idEvento, int idAnimatore) {
+
+        // Recupera l'animatore
+        Animatore animatore = animatoreRepository.findById(idAnimatore).
+                orElseThrow(() -> new RuntimeException("Animatore inesistente"));
+
+        // Recupera l'evento
+        Evento evento = eventoRepository.findById(idEvento).
+                orElseThrow(() -> new RuntimeException("Evento inesistente"));
+
+        // Verifica che l'evento appartenga all'animatore
+        if (!animatore.getEventiCreati().contains(evento)) {
+            throw new RuntimeException("L'evento non appartiene a questo animatore.");
+        }
+        // Verifica se l'evento è già stato caricato sulla piattaforma
+        if (evento.isCaricato()) {
+            throw new RuntimeException("Evento già caricato sulla piattaforma");
+        }
+
+        evento.setCaricato(true);
+        eventoRepository.save(evento);
     }
 }

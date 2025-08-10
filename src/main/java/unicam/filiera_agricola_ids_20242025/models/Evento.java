@@ -16,6 +16,9 @@ public class Evento {
     @JsonIgnore
     private int id;
 
+    // Bool per distinguere eventi creati da eventi caricati
+    private boolean caricato = false;
+
     private String nome;
 
     private int maxPartecipanti;
@@ -44,6 +47,14 @@ public class Evento {
         return id;
     }
 
+    public boolean isCaricato() {
+        return caricato;
+    }
+
+    public void setCaricato(boolean caricato) {
+
+        this.caricato = caricato;
+    }
 
     public String getNome() {
         return nome;

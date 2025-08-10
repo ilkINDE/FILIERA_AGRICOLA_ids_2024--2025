@@ -22,7 +22,14 @@ public class AnimatoreController {
         this.handlerAnimatore = handlerAnimatore;
     }
 
-    @PostMapping("/crea-evento")
+    @PostMapping("/add")
+    public ResponseEntity<Animatore> addAnimatore(@RequestBody Animatore animatore) {
+        Animatore nuovoAnimatore = animatoreRepository.save(animatore);
+        return ResponseEntity.ok(nuovoAnimatore);
+
+    }
+
+    @PostMapping("/{idAnimatore}/crea-evento")
     public ResponseEntity<String> creaEvento(@RequestBody Evento evento, @PathVariable int idAnimatore) {
 
         handlerAnimatore.creaEvento(
@@ -35,7 +42,6 @@ public class AnimatoreController {
 
         return ResponseEntity.ok().body( evento + " creato.");
     }
-
 
 
     @PutMapping("/{idAnimatore}/eventiCreati/{idEvento}/modifica")
@@ -54,6 +60,11 @@ public class AnimatoreController {
         return ResponseEntity.ok("Evento modificato con successo.");
     }
 
+    @PutMapping("/{idAnimatore}/eventiCreati/{idEvento}/caricaEvento")
+    public ResponseEntity<String> caricaEvento(@PathVariable int idAnimatore, @PathVariable int idEvento) {
+        handlerAnimatore.caricaEvento(idEvento, idAnimatore);
+        return ResponseEntity.ok("Evento caricato sulla piattaforma.");
+    }
 
     @GetMapping("/{idAnimatore}/eventiCreati")
     public ResponseEntity<List<Evento>> getEventiCreati(@PathVariable int idAnimatore) {
