@@ -2,31 +2,31 @@ package unicam.filiera_agricola_ids_20242025.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
 public class Animatore {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @JsonIgnore
     private int idAnimatore;
 
-    private String nome;
-    private String cognome;
-    //aggiungere dati di login
+    //collegamento idAnimatore con idUtente
+    @OneToOne
+    @JoinColumn(name = "id_utente", nullable = false, unique = true)
+    private Utente utente;
 
-    @OneToMany
+
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Evento> eventiCreati;
 
 
     public Animatore() {}
 
 
-    public Animatore(String Nome , String Cognome) {
-        this.nome = Nome;
-        this.cognome = Cognome;
+    public Animatore(Utente utente) {
+        this.utente = utente;
     }
 
     public List<Evento> getEventiCreati() {
@@ -37,19 +37,11 @@ public class Animatore {
         this.eventiCreati = eventiCreati;
     }
 
-    public String getNome() {
-        return nome;
+    public Utente getUtente() {
+        return utente;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCognome() {
-        return cognome;
-    }
-
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
+    public void setUtente(Utente utente) {
+        this.utente = utente;
     }
 }
