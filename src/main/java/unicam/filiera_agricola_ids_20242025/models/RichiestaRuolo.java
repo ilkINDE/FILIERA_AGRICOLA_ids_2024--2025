@@ -1,5 +1,6 @@
 package unicam.filiera_agricola_ids_20242025.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
     @Entity
@@ -14,6 +15,7 @@ import jakarta.persistence.*;
 
         @ManyToOne
         @JoinColumn(name = "id_gestore")
+        @JsonIgnore
         private Gestore gestore;
 
         @Enumerated(EnumType.STRING)
@@ -50,6 +52,13 @@ import jakarta.persistence.*;
 
         public void setStatoRichiesta(StatoRichiesta statoRichiesta) {
             this.statoRichiesta = statoRichiesta;
+        }
+
+        public Gestore getGestore() {
+            return gestore;
+        }
+        public void setGestore(Gestore gestore) {
+            this.gestore = gestore;
         }
 
         public RichiestaRuolo(){}

@@ -10,12 +10,15 @@ import unicam.filiera_agricola_ids_20242025.repository.UtenteRepository;
 public class HandlerRichiestaRuolo {
 
     private final UtenteRepository utenteRepository;
-    private RichiestaRuoloRepository richiestaRuoloRepository;
-    private GestoreRepository gestoreRepository;
+    private final RichiestaRuoloRepository richiestaRuoloRepository;
+    private final GestoreRepository gestoreRepository;
 
-    public HandlerRichiestaRuolo(RichiestaRuoloRepository richiestaRuoloRepository, UtenteRepository utenteRepository) {
+
+    public HandlerRichiestaRuolo(RichiestaRuoloRepository richiestaRuoloRepository, UtenteRepository utenteRepository, GestoreRepository gestoreRepository) {
         this.richiestaRuoloRepository = richiestaRuoloRepository;
         this.utenteRepository = utenteRepository;
+        this.gestoreRepository = gestoreRepository;
+
     }
 
     public RichiestaRuolo creaRichiesta(int idUtente, Ruolo ruoloRichiesto) {
@@ -40,6 +43,9 @@ public class HandlerRichiestaRuolo {
                 .orElseThrow(() -> new RuntimeException("Gestore non trovato"));
 
         RichiestaRuolo richiesta = new RichiestaRuolo(utente, ruoloRichiesto);
+
+        // 🔹 associo il gestore
+        richiesta.setGestore(gestore);
 
         gestore.getRichiesteRuolo().add(richiesta);
         return richiestaRuoloRepository.save(richiesta);
