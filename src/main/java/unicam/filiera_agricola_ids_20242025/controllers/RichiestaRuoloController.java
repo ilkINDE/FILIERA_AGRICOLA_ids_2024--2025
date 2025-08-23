@@ -3,11 +3,9 @@ package unicam.filiera_agricola_ids_20242025.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import unicam.filiera_agricola_ids_20242025.Services.HandlerGestore;
-import unicam.filiera_agricola_ids_20242025.Services.HandlerRichiestaRuolo;
+import unicam.filiera_agricola_ids_20242025.services.HandlerRichiestaRuolo;
 import unicam.filiera_agricola_ids_20242025.models.RichiestaRuolo;
 import unicam.filiera_agricola_ids_20242025.models.Ruolo;
-import unicam.filiera_agricola_ids_20242025.repository.RichiestaRuoloRepository;
 
 @RestController
 @RequestMapping("/richieste-ruolo")

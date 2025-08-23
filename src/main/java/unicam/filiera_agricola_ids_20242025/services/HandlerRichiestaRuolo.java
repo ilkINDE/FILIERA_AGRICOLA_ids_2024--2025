@@ -1,4 +1,4 @@
-package unicam.filiera_agricola_ids_20242025.Services;
+package unicam.filiera_agricola_ids_20242025.services;
 
 import org.springframework.stereotype.Service;
 import unicam.filiera_agricola_ids_20242025.models.*;

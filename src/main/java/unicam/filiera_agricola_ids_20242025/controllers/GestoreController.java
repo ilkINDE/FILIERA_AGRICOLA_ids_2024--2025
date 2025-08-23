@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unicam.filiera_agricola_ids_20242025.models.Gestore;
 import unicam.filiera_agricola_ids_20242025.models.RichiestaRuolo;
-import unicam.filiera_agricola_ids_20242025.Services.HandlerGestore;
+import unicam.filiera_agricola_ids_20242025.services.HandlerGestore;
 
 import java.util.List;
 
