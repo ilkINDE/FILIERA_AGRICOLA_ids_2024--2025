@@ -2,8 +2,10 @@ package unicam.filiera_agricola_ids_20242025.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import unicam.filiera_agricola_ids_20242025.models.Amministratori.Gestore;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 
-    @Entity
+@Entity
     public class RichiestaRuolo{
         @Id
         @GeneratedValue

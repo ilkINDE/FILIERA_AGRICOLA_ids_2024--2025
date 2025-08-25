@@ -2,6 +2,8 @@ package unicam.filiera_agricola_ids_20242025.services;
 
 import org.springframework.stereotype.Service;
 import unicam.filiera_agricola_ids_20242025.models.*;
+import unicam.filiera_agricola_ids_20242025.models.Amministratori.Gestore;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 import unicam.filiera_agricola_ids_20242025.repository.GestoreRepository;
 import unicam.filiera_agricola_ids_20242025.repository.RichiestaRuoloRepository;
 import unicam.filiera_agricola_ids_20242025.repository.UtenteRepository;

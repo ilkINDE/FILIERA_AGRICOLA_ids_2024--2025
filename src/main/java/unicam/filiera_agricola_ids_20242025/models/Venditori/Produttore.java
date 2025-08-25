@@ -1,24 +1,33 @@
 package unicam.filiera_agricola_ids_20242025.models.Venditori;
 
 import jakarta.persistence.Entity;
+import unicam.filiera_agricola_ids_20242025.models.Prodotti.ProdottoProduttore;
 
 @Entity
 public class Produttore extends Venditore{
 
-    private String infoColtivazione;
+    private String metodoDiColtivazione;
 
     public Produttore() {}
 
-    public Produttore(String nome, Long Piva, String infoColtivazione) {
+    public Produttore(String nome, Long Piva, String metodoDiColtivazione) {
         super(nome, Piva);
-        this.infoColtivazione = infoColtivazione;
+        this.metodoDiColtivazione = metodoDiColtivazione;
     }
 
-    public String getInfoColtivazione() {
-        return infoColtivazione;
+    public ProdottoProduttore creaProdotto(String nome, double prezzo, String descrizione, String metodoColtivazione) {
+        ProdottoProduttore prodotto = new ProdottoProduttore(nome, prezzo, descrizione, this, metodoDiColtivazione);
+        getProdotti().add(prodotto);
+        return prodotto;
     }
 
-    public void setInfoColtivazione(String infoColtivazione) {
-        this.infoColtivazione = infoColtivazione;
+    public String getMtodoDiColtivazione() {
+
+        return metodoDiColtivazione;
+    }
+
+    public void setMetodoDiColtivazione(String metodoDiColtivazione) {
+
+        this.metodoDiColtivazione = metodoDiColtivazione;
     }
 }

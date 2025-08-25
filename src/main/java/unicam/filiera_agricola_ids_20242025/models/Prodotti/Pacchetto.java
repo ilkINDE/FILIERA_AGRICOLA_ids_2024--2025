@@ -14,6 +14,7 @@ public class Pacchetto {
     private int idPacchetto;
 
     private String nome;
+    private double prezzo;
     private String descrizione;
 
     @ManyToMany
@@ -28,17 +29,18 @@ public class Pacchetto {
     @JoinColumn(name = "distributore_id")
     private Distributore distributore;
 
-    public Pacchetto() {}
 
-    public Pacchetto(String nome, String descrizione, Distributore distributore) {
+    public Pacchetto(String nome, double prezzo, String descrizione, List<Prodotto> prodottiInclusi, Distributore distributore) {
         this.nome = nome;
+        this.prezzo = prezzo;
         this.descrizione = descrizione;
         this.distributore = distributore;
     }
 
-    public int getId() {
-        return idPacchetto;
-    }
+    public Pacchetto() {}
+
+
+    public int getId() {return idPacchetto;}
 
     public String getNome() {
         return nome;
@@ -47,6 +49,10 @@ public class Pacchetto {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public double getPrezzo() {return prezzo;}
+
+    public void setPrezzo(double prezzo) {this.prezzo = prezzo;}
 
     public String getDescrizione() {
         return descrizione;

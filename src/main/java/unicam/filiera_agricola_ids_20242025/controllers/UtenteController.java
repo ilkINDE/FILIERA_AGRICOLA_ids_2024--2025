@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unicam.filiera_agricola_ids_20242025.services.HandlerUtente;
-import unicam.filiera_agricola_ids_20242025.models.Utente;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 
 @RestController
 @RequestMapping("/utenti")

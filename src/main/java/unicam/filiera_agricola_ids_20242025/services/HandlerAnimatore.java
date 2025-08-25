@@ -2,7 +2,7 @@ package unicam.filiera_agricola_ids_20242025.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import unicam.filiera_agricola_ids_20242025.models.Animatore;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Animatore;
 import unicam.filiera_agricola_ids_20242025.models.Evento;
 import unicam.filiera_agricola_ids_20242025.repository.AnimatoreRepository;
 import unicam.filiera_agricola_ids_20242025.repository.EventoRepository;

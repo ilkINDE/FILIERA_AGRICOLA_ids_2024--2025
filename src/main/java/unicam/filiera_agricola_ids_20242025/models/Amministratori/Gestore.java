@@ -1,8 +1,8 @@
-package unicam.filiera_agricola_ids_20242025.models;
+package unicam.filiera_agricola_ids_20242025.models.Amministratori;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
+import unicam.filiera_agricola_ids_20242025.models.RichiestaRuolo;
 
 import java.util.List;
 

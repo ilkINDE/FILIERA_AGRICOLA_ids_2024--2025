@@ -1,7 +1,7 @@
 package unicam.filiera_agricola_ids_20242025.services;
 
 import org.springframework.stereotype.Service;
-import unicam.filiera_agricola_ids_20242025.models.Utente;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 import unicam.filiera_agricola_ids_20242025.repository.UtenteRepository;
 
 @Service

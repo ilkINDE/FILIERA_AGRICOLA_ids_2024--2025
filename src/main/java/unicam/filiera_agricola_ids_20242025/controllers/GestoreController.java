@@ -3,7 +3,7 @@ package unicam.filiera_agricola_ids_20242025.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import unicam.filiera_agricola_ids_20242025.models.Gestore;
+import unicam.filiera_agricola_ids_20242025.models.Amministratori.Gestore;
 import unicam.filiera_agricola_ids_20242025.models.RichiestaRuolo;
 import unicam.filiera_agricola_ids_20242025.services.HandlerGestore;
 
