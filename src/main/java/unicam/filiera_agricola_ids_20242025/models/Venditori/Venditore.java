@@ -2,6 +2,7 @@ package unicam.filiera_agricola_ids_20242025.models.Venditori;
 
 import jakarta.persistence.*;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 
 import java.util.List;
 
@@ -12,6 +13,11 @@ public abstract class Venditore {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idVenditore;
 
+    //collegamento idVenditore con idUtente
+    @OneToOne
+    @JoinColumn(name = "id_utente", nullable = false, unique = true)
+    private Utente utente;
+
     private String nome;
     private Long Piva;
 
@@ -20,12 +26,14 @@ public abstract class Venditore {
 
     public Venditore() {}
 
-    public Venditore(String nome, Long Piva) {
+    public Venditore(Utente utente, String nome, Long Piva) {
+        this.utente = utente;
         this.nome = nome;
         this.Piva = Piva;
     }
 
-    public String getNome() {return nome;}
+    public String getNome() {
+        return nome;}
 
     public void setNome(String nome) {
         this.nome = nome;
@@ -44,6 +52,15 @@ public abstract class Venditore {
     }
 
     public void setProdotti(List<Prodotto> prodotti) {
+
         this.prodotti = prodotti;
+    }
+
+    public Utente getUtente() {
+        return utente;
+    }
+
+    public void setUtente(Utente utente) {
+        this.utente = utente;
     }
 }

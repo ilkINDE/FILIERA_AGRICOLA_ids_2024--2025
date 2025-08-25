@@ -6,6 +6,7 @@ import jakarta.persistence.OneToMany;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.ProdottoDistributore;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 
 import java.util.List;
 
@@ -17,9 +18,9 @@ public class Distributore extends Venditore{
 
         public Distributore() {}
 
-        public Distributore(String nome, Long Piva) {
+        public Distributore(Utente utente, String nome, Long Piva) {
 
-            super(nome, Piva);
+            super(utente, nome, Piva);
         }
 
     public Pacchetto creaPacchetto(String nome, double prezzo, String descrizione, List<Prodotto> prodottiInclusi) {

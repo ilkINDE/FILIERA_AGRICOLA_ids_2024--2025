@@ -16,6 +16,7 @@ public class Pacchetto {
     private String nome;
     private double prezzo;
     private String descrizione;
+    private StatoProdotto statoProdotto;
 
     @ManyToMany
     @JoinTable(
@@ -35,6 +36,7 @@ public class Pacchetto {
         this.prezzo = prezzo;
         this.descrizione = descrizione;
         this.distributore = distributore;
+        this.statoProdotto = StatoProdotto.BOZZA;
     }
 
     public Pacchetto() {}
@@ -77,4 +79,8 @@ public class Pacchetto {
     public void setDistributore(Distributore distributore) {
         this.distributore = distributore;
     }
+
+    public StatoProdotto getStatoProdotto() {return statoProdotto;}
+
+    public void setStatoProdotto(StatoProdotto statoProdotto) {this.statoProdotto = statoProdotto;}
 }

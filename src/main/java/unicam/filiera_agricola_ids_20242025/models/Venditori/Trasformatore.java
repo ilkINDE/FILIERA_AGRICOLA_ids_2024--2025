@@ -2,6 +2,7 @@ package unicam.filiera_agricola_ids_20242025.models.Venditori;
 
 import jakarta.persistence.Entity;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.ProdottoTrasformatore;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 
 import java.util.List;
 
@@ -12,8 +13,8 @@ public class Trasformatore extends Venditore{
 
     public Trasformatore(){}
 
-    public Trasformatore(String nome, Long Piva, String processoDiTrasformazione){
-        super(nome, Piva);
+    public Trasformatore(Utente utente, String nome, Long Piva, String processoDiTrasformazione){
+        super(utente, nome, Piva);
         this.processoDiTrasformazione = processoDiTrasformazione;
     }
 

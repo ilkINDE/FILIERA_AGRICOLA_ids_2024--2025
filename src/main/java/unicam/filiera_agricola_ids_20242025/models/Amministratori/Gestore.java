@@ -38,6 +38,7 @@ public class Gestore {
     public int getIdGestore() {
         return idGestore;
     }
+
     public void setIdGestore(int idGestore) {}
 
     public List<RichiestaRuolo> getRichiesteRuolo() {

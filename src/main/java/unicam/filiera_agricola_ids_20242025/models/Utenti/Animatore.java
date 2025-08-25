@@ -19,13 +19,10 @@ public class Animatore {
     @JoinColumn(name = "id_utente", nullable = false, unique = true)
     private Utente utente;
 
-
     @OneToMany(cascade = CascadeType.ALL)
     private List<Evento> eventiCreati;
 
-
     public Animatore() {}
-
 
     public Animatore(Utente utente) {
         this.utente = utente;

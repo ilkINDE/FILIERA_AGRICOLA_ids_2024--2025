@@ -31,11 +31,23 @@ public class HandlerVenditore {
             this.pacchettoRepository = pacchettoRepository;
         }
 
+        // Metodo per recuperare i produttori dai propri Id
+        public List<Produttore> getProduttoriById(List<Integer> idProduttori) {
+           return idProduttori.stream()
+                  .map(id -> venditoreRepository.findById(id)
+                           .filter(v -> v instanceof Produttore)
+                           .map(v -> (Produttore) v)
+                          .orElseThrow(() -> new IllegalArgumentException("Produttore con id " + id + " non trovato")))
+                  .toList();
+       }
+
         public Prodotto creaProdottoProduttore(int idVenditore, String nome, double prezzo, String descrizione, String metodoColtivazione) {
             Venditore venditore = venditoreRepository.findById(idVenditore)
                     .orElseThrow(()-> new RuntimeException("Venditore non trovato"));
+
             if (!(venditore instanceof Produttore produttore))
                 throw new IllegalArgumentException("Non è un produttore");
+
             ProdottoProduttore prodottoProduttore = produttore.creaProdotto(nome, prezzo, descrizione, metodoColtivazione);
             return prodottoRepository.save(prodottoProduttore);
         }
@@ -43,8 +55,10 @@ public class HandlerVenditore {
         public Prodotto creaProdottoTrasformatore(int idVenditore, String nome, double prezzo, String descrizione, String processo, List<Produttore> produttoriAssociati) {
             Venditore venditore = venditoreRepository.findById(idVenditore)
                     .orElseThrow(()-> new RuntimeException("Venditore non trovato"));
+
             if (!(venditore instanceof Trasformatore trasformatore))
                 throw new IllegalArgumentException("Non è un trasformatore");
+
             ProdottoTrasformatore prodottoTrafsormatore = trasformatore.creaProdotto(nome, prezzo, descrizione, processo, produttoriAssociati);
             return prodottoRepository.save(prodottoTrafsormatore);
         }
@@ -52,8 +66,10 @@ public class HandlerVenditore {
         public Prodotto creaProdottoDistributore(int idVenditore, String nome, double prezzo, String descrizione) {
             Venditore venditore = venditoreRepository.findById(idVenditore)
                     .orElseThrow(()-> new RuntimeException("Venditore non trovato"));
+
             if (!(venditore instanceof Distributore distributore))
                 throw new IllegalArgumentException("Non è un distributore");
+
             Prodotto prodottoDistributore = distributore.creaProdotto(nome, prezzo, descrizione);
             return prodottoRepository.save(prodottoDistributore);
         }
@@ -61,9 +77,15 @@ public class HandlerVenditore {
         public Pacchetto creaPacchetto(int idVenditore, String nome, double prezzo, String descrizione, List<Integer> idProdotti) {
             Venditore venditore = venditoreRepository.findById(idVenditore)
                     .orElseThrow(()-> new RuntimeException("Venditore non trovato"));
+
             if (!(venditore instanceof Distributore distributore))
                 throw new IllegalArgumentException("Solo distributore può creare pacchetti");
+
             List<Prodotto> prodotti = prodottoRepository.findAllById(idProdotti);
+            if (prodotti.size() != idProdotti.size()) {
+                throw new IllegalArgumentException("Alcuni prodotti non esistono.");
+            }
+
             Pacchetto pacchetto = distributore.creaPacchetto(nome, prezzo, descrizione, prodotti);
             return pacchettoRepository.save(pacchetto);
         }
@@ -71,10 +93,13 @@ public class HandlerVenditore {
         public void eliminaProdotto(int idVenditore, int idProdotto) {
             Venditore venditore = venditoreRepository.findById(idVenditore)
                     .orElseThrow(() -> new RuntimeException("Venditore non trovato"));
+
             Prodotto prodotto = prodottoRepository.findById(idProdotto)
                     .orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
+
             if (!venditore.getProdotti().contains(prodotto)) {
                 throw new IllegalArgumentException("Il prodotto non appartiene al venditore");
+
             }
             venditore.getProdotti().remove(prodotto);
             prodottoRepository.delete(prodotto);

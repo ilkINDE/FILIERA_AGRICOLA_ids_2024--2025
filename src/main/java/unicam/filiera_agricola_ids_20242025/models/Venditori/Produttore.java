@@ -2,6 +2,7 @@ package unicam.filiera_agricola_ids_20242025.models.Venditori;
 
 import jakarta.persistence.Entity;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.ProdottoProduttore;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 
 @Entity
 public class Produttore extends Venditore{
@@ -10,8 +11,8 @@ public class Produttore extends Venditore{
 
     public Produttore() {}
 
-    public Produttore(String nome, Long Piva, String metodoDiColtivazione) {
-        super(nome, Piva);
+    public Produttore(Utente utente, String nome, Long Piva, String metodoDiColtivazione) {
+        super(utente, nome, Piva);
         this.metodoDiColtivazione = metodoDiColtivazione;
     }
 
