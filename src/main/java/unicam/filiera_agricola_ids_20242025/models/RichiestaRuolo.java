@@ -26,11 +26,17 @@ import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
         @Enumerated(EnumType.STRING)
         private StatoRichiesta statoRichiesta;
 
-        public RichiestaRuolo(Utente utente, Ruolo ruoloRichiesto) {
+        @Lob
+        private String datiExtra;
+
+        public RichiestaRuolo(Utente utente, Ruolo ruoloRichiesto, String datiExtra) {
             this.utente = utente;
             this.ruoloRichiesto = ruoloRichiesto;
             this.statoRichiesta = StatoRichiesta.IN_ATTESA;
+            this.datiExtra = datiExtra;
         }
+
+        public RichiestaRuolo(){}
 
         public Utente getUtente() {
             return utente;
@@ -59,9 +65,12 @@ import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
         public Gestore getGestore() {
             return gestore;
         }
+
         public void setGestore(Gestore gestore) {
             this.gestore = gestore;
         }
 
-        public RichiestaRuolo(){}
-    }
+        public String getDatiExtra() {return datiExtra;}
+
+        public void setDatiExtra(String datiExtra) {this.datiExtra = datiExtra;}
+}
