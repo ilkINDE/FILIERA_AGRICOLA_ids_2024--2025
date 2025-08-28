@@ -1,4 +1,4 @@
-package unicam.filiera_agricola_ids_20242025.models.Venditori;
+package unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori;
 
 import jakarta.persistence.*;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
@@ -19,17 +19,21 @@ public abstract class Venditore {
     private Utente utente;
 
     private String nome;
-    private Long Piva;
+
+    private Long pIva;
+
+    private String email;
 
     @OneToMany(mappedBy = "venditore", cascade = CascadeType.ALL)
     private List<Prodotto> prodotti;
 
     public Venditore() {}
 
-    public Venditore(Utente utente, String nome, Long Piva) {
+    public Venditore(Utente utente, String nome, Long pIva) {
         this.utente = utente;
         this.nome = nome;
-        this.Piva = Piva;
+        this.pIva = pIva;
+        this.email = utente.getEmail();
     }
 
     public String getNome() {
@@ -39,12 +43,12 @@ public abstract class Venditore {
         this.nome = nome;
     }
 
-    public Long getPiva() {
-        return Piva;
+    public Long getPIva() {
+        return pIva;
     }
 
-    public void setPiva(Long piva) {
-        Piva = piva;
+    public void setPIva(Long pIva) {
+        pIva = pIva;
     }
 
     public List<Prodotto> getProdotti() {

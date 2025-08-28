@@ -2,41 +2,32 @@ package unicam.filiera_agricola_ids_20242025.models.Utenti;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import unicam.filiera_agricola_ids_20242025.models.Evento;
-
-import java.util.List;
 
 @Entity
-public class Animatore {
+public class Acquirente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    private int idAnimatore;
+    private int idAcquirente;
 
-    //collegamento idAnimatore con idUtente
+    //collegamento idAcquirente con idUtente
     @OneToOne
     @JoinColumn(name = "id_utente", nullable = false, unique = true)
     private Utente utente;
 
     private String email;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Evento> eventiCreati;
-
-    public Animatore() {}
-
-    public Animatore(Utente utente) {
+    public Acquirente(Utente utente) {
         this.utente = utente;
         this.email = utente.getEmail();
     }
 
-    public List<Evento> getEventiCreati() {
-        return eventiCreati;
-    }
+    public Acquirente() {}
 
-    public void setEventiCreati(List<Evento> eventiCreati) {
-        this.eventiCreati = eventiCreati;
+
+    public int getIdAcquirente() {
+        return idAcquirente;
     }
 
     public Utente getUtente() {

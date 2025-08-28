@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
-import unicam.filiera_agricola_ids_20242025.models.Venditori.Produttore;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Produttore;
 import unicam.filiera_agricola_ids_20242025.services.HandlerVenditore;
 
 import java.util.List;
@@ -75,4 +75,36 @@ public class VenditoreController {
         return ResponseEntity.ok(pacchetto);
     }
 
+    // Eliminazione pacchetto creato
+    @DeleteMapping("/{idVenditore}/pacchettiCreati/{idPacchetto}/eliminaPacchetto")
+    public ResponseEntity<String> eliminaPacchetto(@PathVariable int idVenditore, @PathVariable int idPacchetto){
+
+            handlerVenditore.eliminaPacchetto(idVenditore, idPacchetto);
+            return ResponseEntity.ok().body("pacchetto eliminato con successo");
+    }
+
+    // Eliminazione prodotto creato
+    @DeleteMapping("/{idVenditore}/prodottiCreati/{idProdotto}/eliminaProdotto")
+    public ResponseEntity<String> eliminaProdotto(@PathVariable int idVenditore, @PathVariable int idProdotto){
+
+        handlerVenditore.eliminaProdotto(idVenditore, idProdotto);
+        return ResponseEntity.ok().body("prodotto eliminato con successo");
+    }
+
+    @PostMapping("/{idVenditore}/prodottiCreati/{idProdotto}/richiediCaricamento")
+
+    public ResponseEntity<Prodotto> richiestaCaricamentoProdotto(@PathVariable int idProdotto, @PathVariable  int idVenditore) {
+
+        return ResponseEntity.ok(handlerVenditore.richiestaCaricamentoProdotto(idProdotto, idVenditore));
+    }
+
+
+    @PostMapping("/{idVenditore}/pacchettiCreati/{idPacchetto}/richiediCaricamento")
+
+    public ResponseEntity<Pacchetto> richiestaCaricamentoPacchetto(@PathVariable int idPacchetto, @PathVariable  int idVenditore) {
+
+        return ResponseEntity.ok(handlerVenditore.richiestaCaricamentoPacchetto(idPacchetto, idVenditore));
+    }
 }
+
+

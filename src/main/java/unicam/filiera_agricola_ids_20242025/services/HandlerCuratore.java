@@ -105,4 +105,5 @@ public class HandlerCuratore {
         pacchetto.setStatoProdotto(StatoProdotto.RIFIUTATO);
         return pacchettoRepository.save(pacchetto);
     }
+
 }

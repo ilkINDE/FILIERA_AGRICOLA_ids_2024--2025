@@ -1,7 +1,7 @@
 package unicam.filiera_agricola_ids_20242025.models.Prodotti;
 
 import jakarta.persistence.Entity;
-import unicam.filiera_agricola_ids_20242025.models.Venditori.Venditore;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Venditore;
 
 @Entity
 public class ProdottoProduttore extends Prodotto {

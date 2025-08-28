@@ -18,8 +18,11 @@ public class Curatore {
     @JoinColumn(name = "id_utente", nullable = false, unique = true)
     private Utente utente;
 
+    private String email;
+
     public Curatore(Utente utente){
         this.utente = utente;
+        this.email = utente.getEmail();
     }
 
     public Curatore() {}

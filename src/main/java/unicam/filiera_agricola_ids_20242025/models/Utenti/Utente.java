@@ -9,7 +9,7 @@ import java.util.Set;
 @Entity
 public class Utente {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idUtente;
 
     private String email;
@@ -27,6 +27,8 @@ public class Utente {
     }
 
     public Utente() {}
+
+    public String getEmail() {return email;}
 
     public Set<Ruolo> getRuoli() {
         return Ruoli;
