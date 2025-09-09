@@ -37,7 +37,7 @@ public class CuratoreController {
     }
 
     // Approva un pacchetto
-    @PostMapping("/{idCuratore}/prodotti/{idPacchetto}/approva")
+    @PostMapping("/{idCuratore}/pacchetti/{idPacchetto}/approva")
     public ResponseEntity<Pacchetto> approvaPacchetto(
             @PathVariable int idCuratore,
             @PathVariable int idPacchetto) {
@@ -56,7 +56,7 @@ public class CuratoreController {
     }
 
     // Rifiuta un pacchetto
-    @PostMapping("/{idCuratore}/prodotti/{idPacchetto}/rifiuta")
+    @PostMapping("/{idCuratore}/pacchetti/{idPacchetto}/rifiuta")
     public ResponseEntity<Pacchetto> rifiutaPacchetto(
             @PathVariable int idCuratore,
             @PathVariable int idPacchetto) {

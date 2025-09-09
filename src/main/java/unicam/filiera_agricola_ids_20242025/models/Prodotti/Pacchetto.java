@@ -1,5 +1,6 @@
 package unicam.filiera_agricola_ids_20242025.models.Prodotti;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Distributore;
@@ -28,6 +29,7 @@ public class Pacchetto {
 
     @ManyToOne
     @JoinColumn(name = "distributore_id")
+    @JsonBackReference
     private Distributore distributore;
 
 
@@ -42,7 +44,7 @@ public class Pacchetto {
     public Pacchetto() {}
 
 
-    public int getId() {return idPacchetto;}
+    public int getIdPacchetto() {return idPacchetto;}
 
     public String getNome() {
         return nome;

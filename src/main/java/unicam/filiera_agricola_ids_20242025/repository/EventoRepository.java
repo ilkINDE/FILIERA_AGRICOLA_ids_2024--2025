@@ -14,4 +14,6 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
 
     @Query("SELECT e FROM Evento e WHERE LOWER(e.indirizzo) = LOWER(:indirizzo) AND e.data = :data AND e.id <> :id")
     List<Evento> findConflitti(@Param("indirizzo") String indirizzo, @Param("data") Date data, @Param("id") Integer id);
+
+    List<Evento> findByCaricatoTrue();
 }

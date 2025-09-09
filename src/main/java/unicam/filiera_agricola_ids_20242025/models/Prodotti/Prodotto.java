@@ -1,5 +1,6 @@
 package unicam.filiera_agricola_ids_20242025.models.Prodotti;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Venditore;
 
@@ -18,6 +19,7 @@ public abstract class Prodotto {
 
     @ManyToOne
     @JoinColumn(name = "venditore_id")
+    @JsonBackReference
     private Venditore venditore;
 
     public Prodotto() {}
@@ -33,6 +35,10 @@ public abstract class Prodotto {
     public String getNome() {
 
         return nome;
+    }
+
+    public int getIdProdotto() {
+        return idProdotto;
     }
 
     public void setNome(String nome) {

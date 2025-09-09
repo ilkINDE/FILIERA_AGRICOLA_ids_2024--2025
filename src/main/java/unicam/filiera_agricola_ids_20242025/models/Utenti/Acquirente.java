@@ -1,6 +1,6 @@
 package unicam.filiera_agricola_ids_20242025.models.Utenti;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -8,7 +8,6 @@ public class Acquirente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private int idAcquirente;
 
     //collegamento idAcquirente con idUtente

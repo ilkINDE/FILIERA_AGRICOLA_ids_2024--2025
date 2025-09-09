@@ -1,5 +1,6 @@
 package unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -14,6 +15,7 @@ import java.util.List;
 public class Distributore extends Venditore{
 
         @OneToMany(mappedBy = "distributore", cascade = CascadeType.ALL)
+        @JsonManagedReference
         private List<Pacchetto> pacchetti;
 
         public Distributore() {}

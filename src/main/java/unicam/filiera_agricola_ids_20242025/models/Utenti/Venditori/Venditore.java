@@ -1,5 +1,6 @@
 package unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
@@ -25,6 +26,7 @@ public abstract class Venditore {
     private String email;
 
     @OneToMany(mappedBy = "venditore", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Prodotto> prodotti;
 
     public Venditore() {}
