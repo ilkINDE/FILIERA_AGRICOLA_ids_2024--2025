@@ -20,11 +20,6 @@ public class GestoreController {
         this.handlerGestore = handlerGestore;
     }
 
-    //  Recupera il gestore unico
-    @GetMapping
-    public ResponseEntity<Gestore> getGestore() {
-        return ResponseEntity.ok(handlerGestore.getGestore());
-    }
 
     //  Lista richieste in attesa
     @GetMapping("/richieste/inattesa")

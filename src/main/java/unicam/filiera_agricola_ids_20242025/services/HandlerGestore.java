@@ -1,6 +1,7 @@
 package unicam.filiera_agricola_ids_20242025.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import unicam.filiera_agricola_ids_20242025.DTO.RichiestaDistributoreDTO;
 import unicam.filiera_agricola_ids_20242025.DTO.RichiestaProduttoreDTO;
@@ -39,17 +40,14 @@ public class HandlerGestore {
         this.curatoreRepository = curatoreRepository;
         this.objectMapper = objectMapper;
     }
-
-
-     // Restituisce l'unico Gestore (id = 1).
-     // Se non esiste, lo crea.
-    public Gestore getGestore() {
-        return gestoreRepository.findById(1)
-                .orElseGet(() -> {
-                    Gestore nuovoGestore = new Gestore("Gestore Unico");
-                    nuovoGestore.setIdGestore(1);
-                    return gestoreRepository.save(nuovoGestore);
-                });
+    //Restituisce il gestore
+    @PostConstruct
+    public void initGestore() {
+        if (gestoreRepository.findById(1).isEmpty()) {
+            Gestore g = new Gestore("Gestore Unico");
+            g.setIdGestore(1);
+            gestoreRepository.save(g);
+        }
     }
 
 
