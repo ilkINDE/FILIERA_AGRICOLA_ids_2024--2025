@@ -3,6 +3,9 @@ package unicam.filiera_agricola_ids_20242025.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import unicam.filiera_agricola_ids_20242025.DTO.InvitoRequestDTO;
+import unicam.filiera_agricola_ids_20242025.models.Invito;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Venditore;
 import unicam.filiera_agricola_ids_20242025.services.HandlerAnimatore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Animatore;
 import unicam.filiera_agricola_ids_20242025.models.Evento;
@@ -81,6 +84,16 @@ public class AnimatoreController {
 
         handlerAnimatore.eliminaEvento(idEvento, idAnimatore);
         return ResponseEntity.ok().body(" evento eliminato. ");
+    }
+
+    @PostMapping("/{idAnimatore}/eventi/{idEvento}/invia-inviti")
+    public ResponseEntity<String> inviaInviti(@RequestBody InvitoRequestDTO request) {
+        handlerAnimatore.inviaInviti(
+                request.getIdAnimatore(),
+                request.getIdEvento(),
+                request.getVenditoriIds()
+        );
+        return ResponseEntity.ok().body("Inviti inviati con successo.");
     }
 
 }

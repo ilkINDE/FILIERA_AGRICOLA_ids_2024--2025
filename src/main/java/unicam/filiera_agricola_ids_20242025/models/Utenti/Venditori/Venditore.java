@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public abstract class Venditore implements Invitato {
+public abstract class Venditore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,38 +47,10 @@ public abstract class Venditore implements Invitato {
         this.email = utente.getEmail();
     }
 
-    /* Observer pattern
-     Questo metodo viene chiamato dall'Animatore quando notifica un nuovo evento.
-     Crea un oggetto Invito associando il venditore (this), l'animatore e l'evento,
-     e lo aggiunge alla lista degli inviti ricevuti dal venditore.*/
 
-    @Override
-    public void riceviInvito(Evento evento, Animatore animatore) {
-        Invito invito = new Invito(this, animatore, evento);
-        invitiRicevuti.add(invito);
+    public int getIdVenditore() {
+        return idVenditore;
     }
-
-    // Gestione inviti
-    public void accettaInvito(int idInvito) {
-        invitiRicevuti.stream()
-                .filter(invito -> invito.getIdInvito() == idInvito)
-                .findFirst()
-                .ifPresent(invito -> {
-                    invito.setStato("ACCETTATO");
-                    invitiRicevuti.remove(invito);
-                });
-    }
-
-    public void rifiutaInvito(int idInvito) {
-        invitiRicevuti.stream()
-                .filter(invito -> invito.getIdInvito() == idInvito)
-                .findFirst()
-                .ifPresent(invito -> {
-                    invito.setStato("RIFIUTATO");
-                    invitiRicevuti.remove(invito);
-                });
-    }
-
 
     public List<Invito> getInvitiRicevuti() {
         return invitiRicevuti;

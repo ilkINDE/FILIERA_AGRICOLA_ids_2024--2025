@@ -2,25 +2,39 @@ package unicam.filiera_agricola_ids_20242025.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import unicam.filiera_agricola_ids_20242025.models.Invitato;
+import unicam.filiera_agricola_ids_20242025.models.OrganizzatoreInviti;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Animatore;
 import unicam.filiera_agricola_ids_20242025.models.Evento;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Venditore;
 import unicam.filiera_agricola_ids_20242025.repository.AnimatoreRepository;
 import unicam.filiera_agricola_ids_20242025.repository.EventoRepository;
+import unicam.filiera_agricola_ids_20242025.repository.VenditoreRepository;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
-public class HandlerAnimatore {
+public class HandlerAnimatore implements OrganizzatoreInviti {
 
     private final AnimatoreRepository animatoreRepository;
 
     private final EventoRepository eventoRepository;
 
+    private final VenditoreRepository venditoreRepository;
+
+    private final HandlerVenditore handlerVenditore;
+
+    // Lista invitati (observer)
+    private final List<Invitato> invitati = new ArrayList<>();
 
     @Autowired
-    public HandlerAnimatore(AnimatoreRepository animatoreRepository, EventoRepository eventoRepository) {
+    public HandlerAnimatore(AnimatoreRepository animatoreRepository, EventoRepository eventoRepository, VenditoreRepository venditoreRepository, HandlerVenditore handlerVenditore) {
         this.animatoreRepository = animatoreRepository;
         this.eventoRepository = eventoRepository;
+        this.venditoreRepository = venditoreRepository;
+        this.handlerVenditore = handlerVenditore;
     }
 
     //gli eventi creati dall'animatore sono modificabli o eliminabili finchè non vengono ufficialmente caricati nella piattaforma
@@ -132,5 +146,43 @@ public class HandlerAnimatore {
 
         evento.setCaricato(true);
         eventoRepository.save(evento);
+    }
+
+    /* Observer pattern
+     Registra un nuovo osservatore (venditore) nella lista degli invitati.
+     In questo modo l'animatore sa chi deve notificare quando
+     viene organizzato un evento.*/
+
+    @Override
+    public void aggiungiInvitato(Invitato i) {
+        invitati.add(i);
+    }
+
+    // Questo metodo scorre tutti gli osservatori (venditori registrati) e invia loro l'invito
+    // chiamando il metodo riceviInvito() su ciascun oggetto Invitato.
+
+    @Override
+    public void notificaInvitati(Evento evento, Animatore animatore) {
+        for (Invitato i : invitati) {
+            i.riceviInvito(evento, animatore);
+        }
+    }
+
+    public void inviaInviti(int idAnimatore, int idEvento, List<Integer> venditoriIds) {
+        Animatore animatore = animatoreRepository.findById(idAnimatore)
+                .orElseThrow(() -> new RuntimeException("Animatore non trovato"));
+
+        Evento evento = eventoRepository.findById(idEvento)
+                .orElseThrow(() -> new RuntimeException("Evento non trovato"));
+
+        for (Integer venditoreId : venditoriIds) {
+            Venditore venditore = venditoreRepository.findById(venditoreId)
+                    .orElseThrow(() -> new RuntimeException("Venditore non trovato"));
+
+            handlerVenditore.setVenditore(venditore);
+            aggiungiInvitato(handlerVenditore);
+        }
+
+        notificaInvitati(evento, animatore);
     }
 }

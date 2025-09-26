@@ -3,6 +3,7 @@ package unicam.filiera_agricola_ids_20242025.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import unicam.filiera_agricola_ids_20242025.models.Invito;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Produttore;
@@ -16,9 +17,11 @@ public class VenditoreController {
 
         private final HandlerVenditore handlerVenditore;
 
+
         @Autowired
         public VenditoreController(HandlerVenditore handlerVenditore) {
             this.handlerVenditore = handlerVenditore;
+
     }
 
     // Creazione prodotto da Produttore
@@ -104,6 +107,30 @@ public class VenditoreController {
     public ResponseEntity<Pacchetto> richiestaCaricamentoPacchetto(@PathVariable int idPacchetto, @PathVariable  int idVenditore) {
 
         return ResponseEntity.ok(handlerVenditore.richiestaCaricamentoPacchetto(idPacchetto, idVenditore));
+    }
+
+    // 🔹 Accetta invito
+    @PutMapping("/{idVenditore}/inviti/{idInvito}/accetta")
+    public ResponseEntity<String> accettaInvito(@PathVariable int idVenditore,
+                                                @PathVariable int idInvito) {
+
+        handlerVenditore.accettaInvito(idVenditore, idInvito);
+        return ResponseEntity.ok("Invito accettato.");
+    }
+
+    // 🔹 Rifiuta invito
+    @PutMapping("/{idVenditore}/inviti/{idInvito}/rifiuta")
+    public ResponseEntity<String> rifiutaInvito(@PathVariable int idVenditore,
+                                                @PathVariable int idInvito) {
+
+        handlerVenditore.rifiutaInvito(idVenditore, idInvito);
+        return ResponseEntity.ok("Invito rifiutato.");
+    }
+
+    // 🔹 Lista inviti ricevuti
+    @GetMapping("/{idVenditore}/inviti")
+    public ResponseEntity<List<Invito>> getInvitiRicevuti(@PathVariable int idVenditore) {
+        return ResponseEntity.ok(handlerVenditore.getInvitiRicevuti(idVenditore));
     }
 }
 

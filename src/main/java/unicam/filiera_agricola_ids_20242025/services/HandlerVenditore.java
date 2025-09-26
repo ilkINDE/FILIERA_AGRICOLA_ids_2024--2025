@@ -2,30 +2,43 @@ package unicam.filiera_agricola_ids_20242025.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import unicam.filiera_agricola_ids_20242025.models.Evento;
+import unicam.filiera_agricola_ids_20242025.models.Invitato;
+import unicam.filiera_agricola_ids_20242025.models.Invito;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.*;
+import unicam.filiera_agricola_ids_20242025.models.Prodotti.State.StatoProdotto;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Animatore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Distributore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Produttore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Trasformatore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Venditore;
+import unicam.filiera_agricola_ids_20242025.repository.InvitoRepository;
 import unicam.filiera_agricola_ids_20242025.repository.PacchettoRepository;
 import unicam.filiera_agricola_ids_20242025.repository.ProdottoRepository;
 import unicam.filiera_agricola_ids_20242025.repository.VenditoreRepository;
 import java.util.List;
 
 @Service
-public class HandlerVenditore {
+public class HandlerVenditore implements Invitato {
 
     private final VenditoreRepository venditoreRepository;
     private final ProdottoRepository prodottoRepository;
     private final PacchettoRepository pacchettoRepository;
+    private final InvitoRepository invitoRepository;
+    private Venditore venditore;
+
+
 
     @Autowired
     public HandlerVenditore(VenditoreRepository venditoreRepository,
                             ProdottoRepository prodottoRepository,
-                            PacchettoRepository pacchettoRepository) {
+                            PacchettoRepository pacchettoRepository,
+                            InvitoRepository invitoRepository
+                            ) {
         this.venditoreRepository = venditoreRepository;
         this.prodottoRepository = prodottoRepository;
         this.pacchettoRepository = pacchettoRepository;
+        this.invitoRepository = invitoRepository;
     }
 
     // Metodo per recuperare i produttori dai propri Id
@@ -129,11 +142,7 @@ public class HandlerVenditore {
             throw new IllegalArgumentException("Il prodotto non appartiene al venditore");
         }
 
-        if (prodotto.getStatoProdotto() != StatoProdotto.BOZZA) {
-            throw new IllegalStateException("Solo i prodotti in BOZZA possono essere inviati in revisione");
-        }
-
-        prodotto.setStatoProdotto(StatoProdotto.IN_REVISIONE);
+        prodotto.inviaInRevisione();
         return prodottoRepository.save(prodotto);
     }
 
@@ -150,10 +159,72 @@ public class HandlerVenditore {
         }
 
         if (pacchetto.getStatoProdotto() != StatoProdotto.BOZZA) {
-            throw new IllegalStateException("Solo i prodotti in BOZZA possono essere inviati in revisione");
+            throw new IllegalStateException("Solo i pacchetti in BOZZA possono essere inviati in revisione");
         }
 
         pacchetto.setStatoProdotto(StatoProdotto.IN_REVISIONE);
         return pacchettoRepository.save(pacchetto);
+    }
+
+    public Venditore getVenditore() {
+        return venditore;
+    }
+    public void setVenditore(Venditore venditore) {
+        this.venditore = venditore;
+    }
+
+    /* Observer pattern
+     Questo metodo viene chiamato dall'Animatore quando notifica un nuovo evento.
+     Crea un oggetto Invito associando il venditore , l'animatore e l'evento,
+     e lo aggiunge alla lista degli inviti ricevuti dal venditore.*/
+
+    @Override
+    public void riceviInvito(Evento evento, Animatore animatore) {
+        Invito invito = new Invito(venditore, animatore, evento);
+        invitoRepository.save(invito);
+        venditore.getInvitiRicevuti().add(invito);
+    }
+
+    // Gestione inviti
+    public void accettaInvito(int idVenditore, int idInvito) {
+
+        Venditore venditore = venditoreRepository.findById(idVenditore)
+                .orElseThrow(() -> new RuntimeException("Venditore non trovato"));
+
+        Invito invito = invitoRepository.findById(idInvito)
+                .orElseThrow(() -> new RuntimeException("Invito non trovato"));
+
+        if (invito.getVenditore().getIdVenditore() != idVenditore)
+            throw new RuntimeException("Invito non appartiene al venditore");
+
+        invito.setStato("ACCETTATO");
+        invitoRepository.save(invito);
+
+        // Rimuove l'invito dalla lista del venditore
+        venditore.getInvitiRicevuti().removeIf(i -> i.getIdInvito() == idInvito);
+
+    }
+
+    public void rifiutaInvito(int idVenditore, int idInvito) {
+
+        Venditore venditore = venditoreRepository.findById(idVenditore)
+                .orElseThrow(() -> new RuntimeException("Venditore non trovato"));
+
+        Invito invito = invitoRepository.findById(idInvito)
+                .orElseThrow(() -> new RuntimeException("Invito non trovato"));
+
+        if (invito.getVenditore().getIdVenditore() != idVenditore)
+            throw new RuntimeException("Invito non appartiene al venditore");
+
+        invito.setStato("RIFIUTATO");
+        invitoRepository.save(invito);
+
+        venditore.getInvitiRicevuti().removeIf(i -> i.getIdInvito() == idInvito);
+
+    }
+
+    // getter per inviti ricevuti
+    public List<Invito> getInvitiRicevuti(int idVenditore) {
+        return invitoRepository.findByVenditoreIdVenditore(idVenditore);
     }
 }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Animatore implements OrganizzatoreInviti {
+public class Animatore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +27,7 @@ public class Animatore implements OrganizzatoreInviti {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Evento> eventiCreati;
 
-    // Lista di osservatori (venditori)
-    @Transient
-    private List<Invitato> invitati = new ArrayList<>();
+
 
     public Animatore() {}
 
@@ -38,25 +36,6 @@ public class Animatore implements OrganizzatoreInviti {
         this.email = utente.getEmail();
     }
 
-    /* Observer pattern
-     Registra un nuovo osservatore (venditore) nella lista degli invitati.
-     In questo modo l'animatore sa chi deve notificare quando
-     viene organizzato un evento.*/
-
-    @Override
-    public void aggiungiInvitato(Invitato i) {
-        invitati.add(i);
-    }
-
-    // Questo metodo scorre tutti gli osservatori (venditori registrati) e invia loro l'invito
-    // chiamando il metodo riceviInvito() su ciascun oggetto Invitato.
-
-    @Override
-    public void notificaInvitati(Evento evento) {
-        for (Invitato i : invitati) {
-            i.riceviInvito(evento, this);
-        }
-    }
 
 
     public List<Evento> getEventiCreati() {
