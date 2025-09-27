@@ -27,6 +27,13 @@ public class CuratoreController {
         return ResponseEntity.ok(prodotti);
     }
 
+    // Ottiene tutti i pacchetti in attesa
+    @GetMapping("/{idCuratore}/pacchetti/inAttesa")
+    public ResponseEntity<List<Pacchetto>> getPacchettiInAttesa(@PathVariable int idCuratore) {
+        List<Pacchetto> pacchetti = handlerCuratore.getPacchettiInAttesa(idCuratore);
+        return ResponseEntity.ok(pacchetti);
+    }
+
     // Approva un prodotto
     @PostMapping("/{idCuratore}/prodotti/{idProdotto}/approva")
     public ResponseEntity<Prodotto> approvaProdotto(

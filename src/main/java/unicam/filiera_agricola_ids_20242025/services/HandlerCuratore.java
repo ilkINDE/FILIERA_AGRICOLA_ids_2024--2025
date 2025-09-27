@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import unicam.filiera_agricola_ids_20242025.models.Amministratori.Curatore;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
-import unicam.filiera_agricola_ids_20242025.models.Prodotti.StatoProdotto;
+import unicam.filiera_agricola_ids_20242025.models.State.StateProdotto.StatoProdotto;
 import unicam.filiera_agricola_ids_20242025.repository.CuratoreRepository;
 import unicam.filiera_agricola_ids_20242025.repository.PacchettoRepository;
 import unicam.filiera_agricola_ids_20242025.repository.ProdottoRepository;
@@ -50,11 +50,7 @@ public class HandlerCuratore {
         Prodotto prodotto = prodottoRepository.findById(idProdotto)
                 .orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
 
-        if (prodotto.getStatoProdotto() != StatoProdotto.IN_REVISIONE) {
-            throw new IllegalStateException("Il prodotto non è in revisione");
-        }
-
-        prodotto.setStatoProdotto(StatoProdotto.APPROVATO);
+        prodotto.approva();
         return prodottoRepository.save(prodotto);
     }
 
@@ -70,7 +66,7 @@ public class HandlerCuratore {
             throw new IllegalStateException("Il pacchetto non è in revisione");
         }
 
-        pacchetto.setStatoProdotto(StatoProdotto.APPROVATO);
+        pacchetto.approva();
         return pacchettoRepository.save(pacchetto);
     }
 
@@ -82,11 +78,7 @@ public class HandlerCuratore {
         Prodotto prodotto = prodottoRepository.findById(idProdotto)
                 .orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
 
-        if (prodotto.getStatoProdotto() != StatoProdotto.IN_REVISIONE) {
-            throw new IllegalStateException("Il prodotto non è in revisione");
-        }
-
-        prodotto.setStatoProdotto(StatoProdotto.RIFIUTATO);
+        prodotto.rifiuta();
         return prodottoRepository.save(prodotto);
     }
 
@@ -102,7 +94,7 @@ public class HandlerCuratore {
             throw new IllegalStateException("Il pacchetto non è in revisione");
         }
 
-        pacchetto.setStatoProdotto(StatoProdotto.RIFIUTATO);
+        pacchetto.rifiuta();
         return pacchettoRepository.save(pacchetto);
     }
 

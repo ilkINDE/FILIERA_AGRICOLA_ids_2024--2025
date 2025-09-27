@@ -1,4 +1,4 @@
-package unicam.filiera_agricola_ids_20242025.models.Prodotti;
+package unicam.filiera_agricola_ids_20242025.models.State.StateProdotto;
 
 public enum StatoProdotto {
     BOZZA,
