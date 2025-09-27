@@ -3,6 +3,7 @@ package unicam.filiera_agricola_ids_20242025.models.Prodotti;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
+import unicam.filiera_agricola_ids_20242025.models.State.StateProdotto.*;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Distributore;
 
 import java.util.List;
@@ -17,6 +18,8 @@ public class Pacchetto {
     private String nome;
     private double prezzo;
     private String descrizione;
+
+    @Enumerated(EnumType.STRING)
     private StatoProdotto statoProdotto;
 
     @ManyToMany
@@ -33,6 +36,11 @@ public class Pacchetto {
     private Distributore distributore;
 
 
+    @Transient
+    private ProdottoState<Pacchetto> state;
+
+
+
     public Pacchetto(String nome, double prezzo, String descrizione, List<Prodotto> prodottiInclusi, Distributore distributore) {
         this.nome = nome;
         this.prezzo = prezzo;
@@ -42,6 +50,25 @@ public class Pacchetto {
     }
 
     public Pacchetto() {}
+
+
+    public void setState(ProdottoState state) {
+        this.state = state;
+    }
+
+    @PostLoad
+    public void initState() {
+        switch (this.statoProdotto) {
+            case BOZZA -> this.state = new BozzaState<>();
+            case IN_REVISIONE -> this.state = new InRevisioneState<>();
+            case APPROVATO -> this.state = new ApprovatoState<>();
+            case RIFIUTATO -> this.state = new RifiutatoState<>();
+        }
+    }
+
+    public void inviaInRevisione() { state.inviaInRevisione(this); }
+    public void approva() { state.approva(this); }
+    public void rifiuta() { state.rifiuta(this); }
 
 
     public int getIdPacchetto() {return idPacchetto;}

@@ -2,6 +2,7 @@ package unicam.filiera_agricola_ids_20242025.models.Prodotti;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import unicam.filiera_agricola_ids_20242025.models.State.StateProdotto.*;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Venditore;
 
 @Entity
@@ -15,12 +16,19 @@ public abstract class Prodotto {
     private String nome;
     private String descrizione;
     private double prezzo;
+
+    @Enumerated(EnumType.STRING)
     private StatoProdotto statoProdotto;
 
     @ManyToOne
     @JoinColumn(name = "venditore_id")
     @JsonBackReference
     private Venditore venditore;
+
+
+    @Transient
+    private ProdottoState<Prodotto> state;
+
 
     public Prodotto() {}
 
@@ -31,6 +39,26 @@ public abstract class Prodotto {
         this.venditore = venditore;
         this.statoProdotto = StatoProdotto.BOZZA;
     }
+
+
+    @PostLoad
+    public void initState() {
+        switch (this.statoProdotto) {
+            case BOZZA -> this.state = new BozzaState<>();
+            case IN_REVISIONE -> this.state = new InRevisioneState<>();
+            case APPROVATO -> this.state = new ApprovatoState<>();
+            case RIFIUTATO -> this.state = new RifiutatoState<>();
+        }
+    }
+
+
+    public void setState(ProdottoState state) {
+        this.state = state;
+    }
+
+    public void inviaInRevisione() { state.inviaInRevisione(this); }
+    public void approva() { state.approva(this); }
+    public void rifiuta() { state.rifiuta(this); }
 
     public String getNome() {
 
