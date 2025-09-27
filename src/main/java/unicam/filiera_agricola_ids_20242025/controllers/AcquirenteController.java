@@ -3,7 +3,9 @@ package unicam.filiera_agricola_ids_20242025.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import unicam.filiera_agricola_ids_20242025.models.Carrello;
+import unicam.filiera_agricola_ids_20242025.models.Evento;
 import unicam.filiera_agricola_ids_20242025.models.Ordine;
+import unicam.filiera_agricola_ids_20242025.models.PrenotazioneEvento;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
 import unicam.filiera_agricola_ids_20242025.services.HandlerAcquirente;
@@ -71,5 +73,20 @@ public class AcquirenteController {
     @PostMapping("/{idAcquirente}/acquista")
     public Ordine acquistaCarrello(@PathVariable int idAcquirente) {
         return handlerAcquirente.acquistaCarrello(idAcquirente);
+    }
+
+    // Mostra solo gli eventi caricati in piattaforma
+    @GetMapping("/disponibili")
+    public List<Evento> getEventiDisponibili() {
+        return handlerAcquirente.getEventiDisponibili();
+    }
+
+
+    // Prenota un evento
+    @PostMapping("/{idAcquirente}/prenota/{idEvento}")
+    public PrenotazioneEvento prenotaEvento(@PathVariable int idAcquirente,
+                                            @PathVariable int idEvento,
+                                            @RequestParam int posti) {
+        return handlerAcquirente.prenotaEvento(idAcquirente, idEvento, posti);
     }
 }
