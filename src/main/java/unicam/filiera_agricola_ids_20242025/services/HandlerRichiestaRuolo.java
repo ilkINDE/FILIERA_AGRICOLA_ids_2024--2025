@@ -7,6 +7,7 @@ import unicam.filiera_agricola_ids_20242025.DTO.RichiestaProduttoreDTO;
 import unicam.filiera_agricola_ids_20242025.DTO.RichiestaTrasformatoreDTO;
 import unicam.filiera_agricola_ids_20242025.models.*;
 import unicam.filiera_agricola_ids_20242025.models.Amministratori.Gestore;
+import unicam.filiera_agricola_ids_20242025.models.State.StateRichiesta.StatoRichiesta;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 import unicam.filiera_agricola_ids_20242025.repository.GestoreRepository;
 import unicam.filiera_agricola_ids_20242025.repository.RichiestaRuoloRepository;

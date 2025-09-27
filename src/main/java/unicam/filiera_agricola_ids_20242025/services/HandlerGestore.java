@@ -9,6 +9,7 @@ import unicam.filiera_agricola_ids_20242025.DTO.RichiestaTrasformatoreDTO;
 import unicam.filiera_agricola_ids_20242025.models.*;
 import unicam.filiera_agricola_ids_20242025.models.Amministratori.Curatore;
 import unicam.filiera_agricola_ids_20242025.models.Amministratori.Gestore;
+import unicam.filiera_agricola_ids_20242025.models.State.StateRichiesta.StatoRichiesta;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Animatore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Distributore;
@@ -118,7 +119,7 @@ public class HandlerGestore {
              }
          }
 
-         richiesta.setStatoRichiesta(StatoRichiesta.APPROVATA);
+         richiesta.approva();
          richiestaRuoloRepository.save(richiesta);
      }
 
@@ -131,7 +132,7 @@ public class HandlerGestore {
             throw new RuntimeException("Richiesta già processata");
         }
 
-        richiesta.setStatoRichiesta(StatoRichiesta.RIFIUTATA);
+        richiesta.rifiuta();
         richiestaRuoloRepository.save(richiesta);
     }
 }

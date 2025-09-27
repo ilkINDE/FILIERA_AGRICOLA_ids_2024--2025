@@ -3,6 +3,7 @@ package unicam.filiera_agricola_ids_20242025.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import unicam.filiera_agricola_ids_20242025.models.Amministratori.Gestore;
+import unicam.filiera_agricola_ids_20242025.models.State.StateRichiesta.*;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 
 @Entity
@@ -29,14 +30,44 @@ import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
         @Lob
         private String datiExtra;
 
-        public RichiestaRuolo(Utente utente, Ruolo ruoloRichiesto, String datiExtra) {
+
+        @Transient
+        private RichiestaState state;
+
+
+    public RichiestaRuolo(Utente utente, Ruolo ruoloRichiesto, String datiExtra) {
             this.utente = utente;
             this.ruoloRichiesto = ruoloRichiesto;
             this.statoRichiesta = StatoRichiesta.IN_ATTESA;
             this.datiExtra = datiExtra;
         }
 
-        public RichiestaRuolo(){}
+
+    public void setState(RichiestaState state) {
+        this.state = state;
+    }
+
+    @PostLoad
+    public void initState() {
+        switch (this.statoRichiesta) {
+            case IN_ATTESA -> this.state = new InAttesaState();
+            case APPROVATA -> this.state = new ApprovataState();
+            case RIFIUTATA -> this.state = new RifiutataState();
+        }
+    }
+
+
+    public void approva() {
+        state.approva(this);
+    }
+
+    public void rifiuta() {
+        state.rifiuta(this);
+    }
+
+
+
+    public RichiestaRuolo(){}
 
         public Utente getUtente() {
             return utente;
