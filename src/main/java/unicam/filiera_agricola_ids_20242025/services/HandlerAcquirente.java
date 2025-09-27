@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import unicam.filiera_agricola_ids_20242025.models.*;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
-import unicam.filiera_agricola_ids_20242025.models.Prodotti.StatoProdotto;
+import unicam.filiera_agricola_ids_20242025.models.State.StateProdotto.StatoProdotto;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente;
 import unicam.filiera_agricola_ids_20242025.repository.*;
 
@@ -20,18 +20,24 @@ public class HandlerAcquirente {
     private final PacchettoRepository pacchettoRepository;
     private final CarrelloRepository carrelloRepository;
     private final OrdineRepository ordineRepository;
+    private final EventoRepository eventoRepository;
+    private final PrenotazioneEventoRepository prenotazioneEventoRepository;
 
     @Autowired
     public HandlerAcquirente(AcquirenteRepository acquirenteRepository,
                              ProdottoRepository prodottoRepository,
                              PacchettoRepository pacchettoRepository,
                              CarrelloRepository carrelloRepository,
-                             OrdineRepository ordineRepository) {
+                             OrdineRepository ordineRepository,
+                             EventoRepository eventoRepository,
+                             PrenotazioneEventoRepository prenotazioneEventoRepository) {
         this.acquirenteRepository = acquirenteRepository;
         this.prodottoRepository = prodottoRepository;
         this.pacchettoRepository = pacchettoRepository;
         this.carrelloRepository = carrelloRepository;
         this.ordineRepository = ordineRepository;
+        this.eventoRepository = eventoRepository;
+        this.prenotazioneEventoRepository = prenotazioneEventoRepository;
     }
 
     //  Mostra solo i prodotti approvati
@@ -57,7 +63,7 @@ public class HandlerAcquirente {
         return existing.orElseGet(() -> carrelloRepository.save(new Carrello(acquirente)));
     }
 
-    //  Aggiungi prodotto approvato al carrello
+    //  Aggiungi prodotto al carrello
     public Carrello aggiungiProdottoAlCarrello(int idAcquirente, int idProdotto, int quantita) {
         Acquirente acquirente = acquirenteRepository.findById(idAcquirente)
                 .orElseThrow(() -> new RuntimeException("Acquirente non trovato"));
@@ -74,7 +80,7 @@ public class HandlerAcquirente {
         return carrelloRepository.save(carrello);
     }
 
-    //  Aggiungi pacchetto approvato al carrello
+    //  Aggiungi pacchetto al carrello
     public Carrello aggiungiPacchettoAlCarrello(int idAcquirente, int idPacchetto, int quantita) {
         Acquirente acquirente = acquirenteRepository.findById(idAcquirente)
                 .orElseThrow(() -> new RuntimeException("Acquirente non trovato"));
@@ -145,6 +151,37 @@ public class HandlerAcquirente {
         carrelloRepository.save(carrello);
 
         return ordine;
+    }
+
+    // mostra solo eventi caricati in piattaforma
+    public List<Evento> getEventiDisponibili() {
+        return eventoRepository.findByCaricatoTrue();
+    }
+
+
+    public PrenotazioneEvento prenotaEvento(int idAcquirente, int idEvento, int posti) {
+        Acquirente acquirente = acquirenteRepository.findById(idAcquirente)
+                .orElseThrow(() -> new RuntimeException("Acquirente non trovato"));
+        Evento evento = eventoRepository.findById(idEvento)
+                .orElseThrow(() -> new RuntimeException("Evento non trovato"));
+
+        //  Controllo disponibilità
+        if (evento.getPostiDisponibili() < posti) {
+            throw new RuntimeException("Posti insufficienti per l'evento");
+        }
+
+
+        if (posti <= 0) {
+            throw new RuntimeException("Numero di posti non valido");
+        }
+
+        PrenotazioneEvento prenotazione = new PrenotazioneEvento(acquirente, evento, posti);
+        //  Aggiorna i posti rimasti
+        evento.setPostiDisponibili(evento.getPostiDisponibili() - posti);
+
+        //  Salva evento aggiornato
+        eventoRepository.save(evento);
+        return prenotazioneEventoRepository.save(prenotazione);
     }
 
 }
