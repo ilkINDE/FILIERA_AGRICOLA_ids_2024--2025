@@ -3,10 +3,10 @@ package unicam.filiera_agricola_ids_20242025.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import unicam.filiera_agricola_ids_20242025.models.Evento;
-import unicam.filiera_agricola_ids_20242025.models.Invitato;
+import unicam.filiera_agricola_ids_20242025.models.Observer.Invitato;
 import unicam.filiera_agricola_ids_20242025.models.Invito;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.*;
-import unicam.filiera_agricola_ids_20242025.models.Prodotti.State.StatoProdotto;
+import unicam.filiera_agricola_ids_20242025.models.State.StateProdotto.StatoProdotto;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Animatore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Distributore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Produttore;
@@ -162,7 +162,8 @@ public class HandlerVenditore implements Invitato {
             throw new IllegalStateException("Solo i pacchetti in BOZZA possono essere inviati in revisione");
         }
 
-        pacchetto.setStatoProdotto(StatoProdotto.IN_REVISIONE);
+
+        pacchetto.inviaInRevisione();
         return pacchettoRepository.save(pacchetto);
     }
 
@@ -197,7 +198,8 @@ public class HandlerVenditore implements Invitato {
         if (invito.getVenditore().getIdVenditore() != idVenditore)
             throw new RuntimeException("Invito non appartiene al venditore");
 
-        invito.setStato("ACCETTATO");
+        //invito.setStato("ACCETTATO");
+        invito.accetta();
         invitoRepository.save(invito);
 
         // Rimuove l'invito dalla lista del venditore
@@ -216,7 +218,8 @@ public class HandlerVenditore implements Invitato {
         if (invito.getVenditore().getIdVenditore() != idVenditore)
             throw new RuntimeException("Invito non appartiene al venditore");
 
-        invito.setStato("RIFIUTATO");
+        //invito.setStato("RIFIUTATO");
+        invito.rifiuta();
         invitoRepository.save(invito);
 
         venditore.getInvitiRicevuti().removeIf(i -> i.getIdInvito() == idInvito);

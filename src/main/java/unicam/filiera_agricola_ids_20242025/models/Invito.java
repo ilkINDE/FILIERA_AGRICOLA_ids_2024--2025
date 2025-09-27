@@ -2,6 +2,7 @@ package unicam.filiera_agricola_ids_20242025.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import unicam.filiera_agricola_ids_20242025.models.State.StateInvito.*;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Animatore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Venditore;
 
@@ -23,7 +24,12 @@ public class Invito {
     @ManyToOne
     private Evento evento;
 
-    private String stato;
+
+    @Enumerated(EnumType.STRING)
+    private StatoInvito statoInvito;
+
+    @Transient
+    private InvitoState state;
 
     public Invito() {}
 
@@ -31,7 +37,29 @@ public class Invito {
         this.venditore = venditore;
         this.animatore = animatore;
         this.evento = evento;
-        this.stato = "IN_ATTESA";
+        this.statoInvito = StatoInvito.IN_ATTESA;
+    }
+
+    public void setState(InvitoState state) {
+        this.state = state;
+    }
+
+    @PostLoad
+    public void initState() {
+        switch (this.statoInvito) {
+            case IN_ATTESA -> this.state = new InAttesaState();
+            case ACCETTATO -> this.state = new AccettatoState();
+            case RIFIUTATO -> this.state = new RifiutatoState();
+        }
+    }
+
+
+    public void accetta() {
+        state.accetta(this);
+    }
+
+    public void rifiuta() {
+        state.rifiuta(this);
     }
 
     public int getIdInvito() {
@@ -50,11 +78,13 @@ public class Invito {
         return evento;
     }
 
-    public String getStato() {
-        return stato;
+    public StatoInvito getStatoInvito() {
+        return statoInvito;
     }
 
-    public void setStato(String stato) {
-        this.stato = stato;
+    public void setStatoInvito(StatoInvito statoInvito) {
+        this.statoInvito = statoInvito;
     }
+
+
 }

@@ -2,8 +2,8 @@ package unicam.filiera_agricola_ids_20242025.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import unicam.filiera_agricola_ids_20242025.models.Invitato;
-import unicam.filiera_agricola_ids_20242025.models.OrganizzatoreInviti;
+import unicam.filiera_agricola_ids_20242025.models.Observer.Invitato;
+import unicam.filiera_agricola_ids_20242025.models.Observer.OrganizzatoreInviti;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Animatore;
 import unicam.filiera_agricola_ids_20242025.models.Evento;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Venditore;
@@ -174,6 +174,12 @@ public class HandlerAnimatore implements OrganizzatoreInviti {
 
         Evento evento = eventoRepository.findById(idEvento)
                 .orElseThrow(() -> new RuntimeException("Evento non trovato"));
+
+
+        if (evento.isCaricato()) {
+            throw new RuntimeException("Non è possibile invitare venditori a un evento già caricato sulla piattaforma.");
+        }
+
 
         for (Integer venditoreId : venditoriIds) {
             Venditore venditore = venditoreRepository.findById(venditoreId)
