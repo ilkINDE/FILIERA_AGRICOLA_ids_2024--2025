@@ -25,13 +25,6 @@ public class AnimatoreController {
         this.handlerAnimatore = handlerAnimatore;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<Animatore> addAnimatore(@RequestBody Animatore animatore) {
-        Animatore nuovoAnimatore = animatoreRepository.save(animatore);
-        return ResponseEntity.ok(nuovoAnimatore);
-
-    }
-
     @PostMapping("/{idAnimatore}/crea-evento")
     public ResponseEntity<String> creaEvento(@RequestBody Evento evento, @PathVariable int idAnimatore) {
 
@@ -79,7 +72,7 @@ public class AnimatoreController {
         return ResponseEntity.ok(eventiCreati);
     }
 
-    @DeleteMapping("/{idAnimatore}/eventiCreati/{idEvento}/eliminaEvento/")
+    @DeleteMapping("/{idAnimatore}/eventiCreati/{idEvento}/eliminaEvento")
     public ResponseEntity<String> eliminaEvento(@PathVariable int idEvento, @PathVariable int idAnimatore){
 
         handlerAnimatore.eliminaEvento(idEvento, idAnimatore);
@@ -95,5 +88,4 @@ public class AnimatoreController {
         );
         return ResponseEntity.ok().body("Inviti inviati con successo.");
     }
-
 }

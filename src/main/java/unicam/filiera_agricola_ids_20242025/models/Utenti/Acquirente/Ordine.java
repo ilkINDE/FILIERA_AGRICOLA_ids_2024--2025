@@ -1,7 +1,6 @@
-package unicam.filiera_agricola_ids_20242025.models;
+package unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente;
 
 import jakarta.persistence.*;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente;
 
 import java.time.LocalDateTime;
 import java.util.List;

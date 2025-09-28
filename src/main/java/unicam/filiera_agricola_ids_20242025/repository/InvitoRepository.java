@@ -9,5 +9,5 @@ public interface InvitoRepository extends JpaRepository<Invito, Integer> {
     // Tutti gli inviti ricevuti da un venditore
     List<Invito> findByVenditoreIdVenditore(int idVenditore);
 
-    List<Invito> findByVenditoreIdVenditoreAndStato(int idVenditore, String stato);
+    List<Invito> findByVenditoreIdVenditoreAndStatoInvito(int idVenditore, String stato);
 }
