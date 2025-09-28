@@ -9,7 +9,7 @@ import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
 import unicam.filiera_agricola_ids_20242025.services.HandlerUtente;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -23,11 +23,11 @@ public class UtenteController {
         this.handlerUtente = handlerUtente;
     }
 
-    // REGISTRAZIONE
+    // registrazione
     @PostMapping("/registrazione")
     public ResponseEntity<Utente> registra(@RequestParam String nome,
                                            @RequestParam String cognome,
-                                           @RequestParam Date dataNascita,
+                                           @RequestParam LocalDate dataNascita,
                                            @RequestParam String comuneDiProvenienza,
                                            @RequestParam String email,
                                            @RequestParam String password) {
@@ -35,46 +35,51 @@ public class UtenteController {
         return ResponseEntity.ok(nuovo);
     }
 
-    // LISTA RUOLI DISPONIBILI
-    @GetMapping("/ruoli")
-    public ResponseEntity<?> listaRuoli() {
-        return ResponseEntity.ok(handlerUtente.getRuoliDisponibili());
+    // ruoli disponibili
+    @GetMapping("{idUtente}/ruoli")
+    public ResponseEntity<?> listaRuoli(
+            @PathVariable int idUtente
+    ) {
+        return ResponseEntity.ok(handlerUtente.getRuoliDisponibili(idUtente));
     }
 
-    // --- PRODOTTI ---
+    // prodotti caricati nella piattaforma
     @GetMapping("/prodottiDisponibili")
     public ResponseEntity<List<Prodotto>> getProdottiDisponibili() {
         return ResponseEntity.ok(handlerUtente.getProdottiDisponibili());
     }
 
+    // info su prodotto singolo
     @GetMapping("/esploraProdotto/{idProdotto}")
     public ResponseEntity<Prodotto> esploraProdotto(@PathVariable int idProdotto) {
         return ResponseEntity.ok(handlerUtente.esploraProdotto(idProdotto));
     }
 
-    // --- PACCHETTI ---
+    // pacchetti disponbili nella piattaforma
     @GetMapping("/pacchettiDisponibili")
     public ResponseEntity<List<Pacchetto>> getPacchettiDisponibili() {
         return ResponseEntity.ok(handlerUtente.getPacchettiDisponibili());
     }
 
+    // info su pacchetto singolo
     @GetMapping("/esploraPacchetto/{idPacchetto}")
     public ResponseEntity<Pacchetto> esploraPacchetto(@PathVariable int idPacchetto) {
         return ResponseEntity.ok(handlerUtente.esploraPacchetto(idPacchetto));
     }
 
-    // --- EVENTI ---
+    // eventi caricati sulla piattaforma
     @GetMapping("/eventiDisponibili")
     public ResponseEntity<List<Evento>> getEventiDisponibili() {
         return ResponseEntity.ok(handlerUtente.getEventiDisponibili());
     }
 
+    // info su evento singolo
     @GetMapping("/esploraEvento/{idEvento}")
     public ResponseEntity<Evento> esploraEvento(@PathVariable int idEvento) {
         return ResponseEntity.ok(handlerUtente.esploraEvento(idEvento));
     }
 
-
+    // accede alla mappa
     @GetMapping("/mappa")
     public ResponseEntity<List<String>> esploraMappa() {
         return ResponseEntity.ok(handlerUtente.esploraMappa());

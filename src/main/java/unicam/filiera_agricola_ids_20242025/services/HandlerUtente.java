@@ -1,8 +1,9 @@
 package unicam.filiera_agricola_ids_20242025.services;
 
+import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import unicam.filiera_agricola_ids_20242025.models.Evento;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
@@ -10,7 +11,7 @@ import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
 import unicam.filiera_agricola_ids_20242025.models.State.StateProdotto.StatoProdotto;
 import unicam.filiera_agricola_ids_20242025.models.Ruolo;
 import org.springframework.stereotype.Service;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.Acquirente;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 import unicam.filiera_agricola_ids_20242025.repository.*;
 
@@ -35,11 +36,15 @@ public class HandlerUtente {
         this.eventoRepository = eventoRepository;
     }
 
-    public List<Ruolo> getRuoliDisponibili() {
-        return Arrays.asList(Ruolo.values());
+    public Set<Ruolo> getRuoliDisponibili(int idUtente) {
+
+        Utente utente = utenteRepository.findById(idUtente)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+
+        return utente.getRuoli();
     }
 
-    public Utente registrazione(String nome, String cognome, Date dataNascita, String comuneDiProvenienza, String email, String password) {
+    public Utente registrazione(String nome, String cognome, LocalDate dataNascita, String comuneDiProvenienza, String email, String password) {
         // Controllo se email già presente
         if (utenteRepository.findByEmail(email).isPresent()) {
             throw new IllegalArgumentException("Email già registrata: " + email);

@@ -3,7 +3,7 @@ package unicam.filiera_agricola_ids_20242025.models.Utenti;
 import jakarta.persistence.*;
 import unicam.filiera_agricola_ids_20242025.models.Ruolo;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +15,7 @@ public class Utente {
 
     private String nome;
     private String cognome;
-    private Date dataNascita;
+    private LocalDate dataNascita;
     private String comuneDiProvenienza;
     private String email;
     private String password;
@@ -25,7 +25,7 @@ public class Utente {
     private Set<Ruolo> Ruoli = new HashSet<>();
 
     // costruttore che assegna sempre ACQUIRENTE come ruolo di default
-    public Utente(String nome, String cognome, Date dataNascita, String comuneDiProvenienza, String email, String password) {
+    public Utente(String nome, String cognome, LocalDate dataNascita, String comuneDiProvenienza, String email, String password) {
         this.nome = nome;
         this.cognome = cognome;
         this.dataNascita = dataNascita;
@@ -49,10 +49,10 @@ public class Utente {
     public void setCognome(String cognome) {
         this.cognome = cognome;
     }
-    public Date getDataNascita() {
+    public LocalDate getDataNascita() {
         return dataNascita;
     }
-    public void setDataNascita(Date dataNascita) {
+    public void setDataNascita(LocalDate dataNascita) {
         this.dataNascita = dataNascita;
     }
     public String getComuneDiProvenienza() {
