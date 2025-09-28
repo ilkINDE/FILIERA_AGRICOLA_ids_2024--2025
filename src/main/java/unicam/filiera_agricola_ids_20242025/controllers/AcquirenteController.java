@@ -2,10 +2,11 @@ package unicam.filiera_agricola_ids_20242025.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import unicam.filiera_agricola_ids_20242025.models.Carrello;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.Carrello;
 import unicam.filiera_agricola_ids_20242025.models.Evento;
-import unicam.filiera_agricola_ids_20242025.models.Ordine;
-import unicam.filiera_agricola_ids_20242025.models.PrenotazioneEvento;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.CarrelloItem;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.Ordine;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.PrenotazioneEvento;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
 import unicam.filiera_agricola_ids_20242025.services.HandlerAcquirente;
@@ -24,49 +25,47 @@ public class AcquirenteController {
     }
 
     //  Mostra solo i prodotti approvati
-    @GetMapping("/prodotti")
+    @GetMapping("/prodottiDisponibili")
     public List<Prodotto> getProdottiDisponibili() {
         return handlerAcquirente.getProdottiDisponibili();
     }
 
     //  Mostra solo i pacchetti approvati
-    @GetMapping("/pacchetti")
+    @GetMapping("/pacchettiDisponibili")
     public List<Pacchetto> getPacchettiDisponibili() {
         return handlerAcquirente.getPacchettiDisponibili();
     }
 
-    //  Aggiungi prodotto al carrello
-    @PostMapping("/{idAcquirente}/carrello/aggiuntaProdotti/{idProdotto}")
-    public Carrello aggiungiProdottoAlCarrello(
+    // Mostra riepilogo del carrello
+    @GetMapping("{idAcquirente}/riepilogoCarrello")
+    public Carrello getRiepilogoCarrello(
+            @PathVariable int idAcquirente
+    ) { return handlerAcquirente.riepilogoCarrello(idAcquirente);}
+
+    // Aggiungi un item al carrello (prodotto o pacchetto)
+    @PostMapping("/{idAcquirente}/carrello/aggiungiItem")
+    public Carrello aggiungiItemAlCarrello(
             @PathVariable int idAcquirente,
-            @PathVariable int idProdotto,
+            @RequestParam(required = false) Integer idProdotto,
+            @RequestParam(required = false) Integer idPacchetto,
             @RequestParam int quantita) {
-        return handlerAcquirente.aggiungiProdottoAlCarrello(idAcquirente, idProdotto, quantita);
+        return handlerAcquirente.aggiungiItemAlCarrello(idAcquirente, idProdotto, idPacchetto, quantita);
     }
 
-    //  Aggiungi pacchetto al carrello
-    @PostMapping("/{idAcquirente}/carrello/aggiuntaPacchetti/{idPacchetto}")
-    public Carrello aggiungiPacchettoAlCarrello(
-            @PathVariable int idAcquirente,
-            @PathVariable int idPacchetto,
-            @RequestParam int quantita) {
-        return handlerAcquirente.aggiungiPacchettoAlCarrello(idAcquirente, idPacchetto, quantita);
-    }
-
-    //  Rimuovi prodotto dal carrello
-    @DeleteMapping("/{idAcquirente}/carrello/rimozioneProdotti/{idProdotto}")
+    //  Rimuovi item dal carrello(pacchetto o prodotto)
+    @DeleteMapping("/{idAcquirente}/carrello/rimozioneProdotti")
     public Carrello rimuoviProdottoDalCarrello(
             @PathVariable int idAcquirente,
-            @PathVariable int idProdotto) {
-        return handlerAcquirente.rimuoviProdottoDalCarrello(idAcquirente, idProdotto);
+            @RequestParam int idProdotto,
+            @RequestParam int idPacchetto) {
+        return handlerAcquirente.rimuoviItemDalCarrello(idAcquirente, idProdotto, idPacchetto);
     }
 
-    //  Rimuovi pacchetto dal carrello
-    @DeleteMapping("/{idAcquirente}/carrello/rimozionePacchetti/{idPacchetto}")
-    public Carrello rimuoviPacchettoDalCarrello(
-            @PathVariable int idAcquirente,
-            @PathVariable int idPacchetto) {
-        return handlerAcquirente.rimuoviPacchettoDalCarrello(idAcquirente, idPacchetto);
+    // Svuota il carrello
+    @DeleteMapping("/{idAcquirente}/carrello/svuotaCarrello")
+    public void svuotaCarrello(
+            @PathVariable int idAcquirente){
+        handlerAcquirente.svuotaCarrello(idAcquirente);
     }
 
     //  Acquista i prodotti nel carrello
@@ -76,7 +75,7 @@ public class AcquirenteController {
     }
 
     // Mostra solo gli eventi caricati in piattaforma
-    @GetMapping("/disponibili")
+    @GetMapping("/eventiDisponibili")
     public List<Evento> getEventiDisponibili() {
         return handlerAcquirente.getEventiDisponibili();
     }

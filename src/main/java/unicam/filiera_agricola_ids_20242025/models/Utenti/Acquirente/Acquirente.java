@@ -1,7 +1,9 @@
-package unicam.filiera_agricola_ids_20242025.models.Utenti;
+package unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 
 @Entity
 public class Acquirente {
@@ -17,9 +19,14 @@ public class Acquirente {
 
     private String email;
 
+    @OneToOne(mappedBy = "acquirente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Carrello carrello;
+
     public Acquirente(Utente utente) {
         this.utente = utente;
         this.email = utente.getEmail();
+        this.carrello = new Carrello(this);
     }
 
     public Acquirente() {}
@@ -35,5 +42,13 @@ public class Acquirente {
 
     public void setUtente(Utente utente) {
         this.utente = utente;
+    }
+
+    public Carrello getCarrello() {
+        return carrello;
+    }
+
+    public void setCarrello(Carrello carrello) {
+        this.carrello = carrello;
     }
 }

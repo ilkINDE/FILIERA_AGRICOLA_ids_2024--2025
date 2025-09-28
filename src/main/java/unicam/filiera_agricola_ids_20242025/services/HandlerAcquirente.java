@@ -6,7 +6,7 @@ import unicam.filiera_agricola_ids_20242025.models.*;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
 import unicam.filiera_agricola_ids_20242025.models.State.StateProdotto.StatoProdotto;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.*;
 import unicam.filiera_agricola_ids_20242025.repository.*;
 
 import java.util.List;
@@ -56,73 +56,79 @@ public class HandlerAcquirente {
                 .toList();
     }
 
+    // Mostra il riepilogo del carrello
+    public Carrello riepilogoCarrello(int idAcquirente){
 
-    // Recupera o crea un carrello per l'acquirente
-    private Carrello getOrCreateCarrello(Acquirente acquirente) {
-        Optional<Carrello> existing = carrelloRepository.findByAcquirente(acquirente);
-        return existing.orElseGet(() -> carrelloRepository.save(new Carrello(acquirente)));
-    }
-
-    //  Aggiungi prodotto al carrello
-    public Carrello aggiungiProdottoAlCarrello(int idAcquirente, int idProdotto, int quantita) {
         Acquirente acquirente = acquirenteRepository.findById(idAcquirente)
                 .orElseThrow(() -> new RuntimeException("Acquirente non trovato"));
 
-        Prodotto prodotto = prodottoRepository.findById(idProdotto)
-                .orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
+        return acquirente.getCarrello();
+    }
 
+    //  Aggiungi prodotto o pacchetto al carrello
+    public Carrello aggiungiItemAlCarrello(int idAcquirente, Integer idProdotto, Integer idPacchetto, int quantita) {
 
-        Carrello carrello = getOrCreateCarrello(acquirente);
+        if ((idProdotto == null && idPacchetto == null) ||
+                (idProdotto != null && idPacchetto != null)) {
+            throw new IllegalArgumentException("Devi specificare SOLO uno tra idProdotto o idPacchetto");
+        }
 
-        CarrelloItem item = new CarrelloItem(prodotto, quantita);
+        Acquirente acquirente = acquirenteRepository.findById(idAcquirente)
+                .orElseThrow(() -> new RuntimeException("Acquirente non trovato"));
+
+        Carrello carrello = acquirente.getCarrello();
+
+        CarrelloItem item;
+
+        if (idProdotto != null) {
+            Prodotto prodotto = prodottoRepository.findById(idProdotto)
+                    .orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
+            item = new CarrelloItem(prodotto, quantita);
+        } else {
+            Pacchetto pacchetto = pacchettoRepository.findById(idPacchetto)
+                    .orElseThrow(() -> new RuntimeException("Pacchetto non trovato"));
+            item = new CarrelloItem(pacchetto, quantita);
+        }
+
         carrello.aggiungiItem(item);
+        return carrelloRepository.save(carrello);
+    }
+
+    //  Rimuovi prodotto o pacchetto dal carrello
+    public Carrello rimuoviItemDalCarrello(int idAcquirente, Integer idProdotto, Integer idPacchetto) {
+
+        if ((idProdotto == null && idPacchetto == null) ||
+                (idProdotto != null && idPacchetto != null)) {
+            throw new IllegalArgumentException("Devi specificare SOLO uno tra idProdotto o idPacchetto");
+        }
+
+        Acquirente acquirente = acquirenteRepository.findById(idAcquirente)
+                .orElseThrow(() -> new RuntimeException("Acquirente non trovato"));
+
+        Carrello carrello = acquirente.getCarrello();
+
+        if (idProdotto != null) {
+            carrello.getItems().removeIf(item ->
+                    item.getProdotto() != null && item.getProdotto().getIdProdotto() == idProdotto
+            );
+        } else {
+            carrello.getItems().removeIf(item ->
+                    item.getPacchetto() != null && item.getPacchetto().getIdPacchetto() == idPacchetto
+            );
+        }
 
         return carrelloRepository.save(carrello);
     }
 
-    //  Aggiungi pacchetto al carrello
-    public Carrello aggiungiPacchettoAlCarrello(int idAcquirente, int idPacchetto, int quantita) {
+    // Svuota il carrello
+    public void svuotaCarrello(int idAcquirente) {
         Acquirente acquirente = acquirenteRepository.findById(idAcquirente)
                 .orElseThrow(() -> new RuntimeException("Acquirente non trovato"));
 
-        Pacchetto pacchetto = pacchettoRepository.findById(idPacchetto)
-                .orElseThrow(() -> new RuntimeException("Pacchetto non trovato"));
+        Carrello carrello = acquirente.getCarrello();
 
-
-        Carrello carrello = getOrCreateCarrello(acquirente);
-
-        CarrelloItem item = new CarrelloItem(pacchetto, quantita);
-        carrello.aggiungiItem(item);
-
-        return carrelloRepository.save(carrello);
-    }
-
-    //  Rimuovi prodotto dal carrello
-    public Carrello rimuoviProdottoDalCarrello(int idAcquirente, int idProdotto) {
-        Acquirente acquirente = acquirenteRepository.findById(idAcquirente)
-                .orElseThrow(() -> new RuntimeException("Acquirente non trovato"));
-
-        Carrello carrello = getOrCreateCarrello(acquirente);
-
-        carrello.getItems().removeIf(item ->
-                item.getProdotto() != null && item.getProdotto().getIdProdotto() == idProdotto
-        );
-
-        return carrelloRepository.save(carrello);
-    }
-
-    //  Rimuovi pacchetto dal carrello
-    public Carrello rimuoviPacchettoDalCarrello(int idAcquirente, int idPacchetto) {
-        Acquirente acquirente = acquirenteRepository.findById(idAcquirente)
-                .orElseThrow(() -> new RuntimeException("Acquirente non trovato"));
-
-        Carrello carrello = getOrCreateCarrello(acquirente);
-
-        carrello.getItems().removeIf(item ->
-                item.getPacchetto() != null && item.getPacchetto().getIdPacchetto() == idPacchetto
-        );
-
-        return carrelloRepository.save(carrello);
+        carrello.svuotaCarrello();
+        carrelloRepository.save(carrello);
     }
 
     //  Acquista tutto il carrello → genera un Ordine
@@ -130,7 +136,7 @@ public class HandlerAcquirente {
         Acquirente acquirente = acquirenteRepository.findById(idAcquirente)
                 .orElseThrow(() -> new RuntimeException("Acquirente non trovato"));
 
-        Carrello carrello = getOrCreateCarrello(acquirente);
+        Carrello carrello = acquirente.getCarrello();
 
         if (carrello.getItems().isEmpty()) {
             throw new RuntimeException("Il carrello è vuoto");
@@ -153,12 +159,12 @@ public class HandlerAcquirente {
         return ordine;
     }
 
-    // mostra solo eventi caricati in piattaforma
+    // Mostra solo eventi caricati in piattaforma
     public List<Evento> getEventiDisponibili() {
         return eventoRepository.findByCaricatoTrue();
     }
 
-
+    // Prenotazione ad un evento
     public PrenotazioneEvento prenotaEvento(int idAcquirente, int idEvento, int posti) {
         Acquirente acquirente = acquirenteRepository.findById(idAcquirente)
                 .orElseThrow(() -> new RuntimeException("Acquirente non trovato"));
