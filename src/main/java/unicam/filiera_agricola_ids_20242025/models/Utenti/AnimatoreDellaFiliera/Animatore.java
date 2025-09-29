@@ -1,8 +1,8 @@
-package unicam.filiera_agricola_ids_20242025.models.Utenti;
+package unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import unicam.filiera_agricola_ids_20242025.models.Evento;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente.Utente;
 
 import java.util.List;
 

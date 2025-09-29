@@ -3,7 +3,7 @@ package unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente.Utente;
 
 @Entity
 public class Acquirente {

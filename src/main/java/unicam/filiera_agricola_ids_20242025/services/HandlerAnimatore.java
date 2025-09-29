@@ -4,15 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import unicam.filiera_agricola_ids_20242025.models.Observer.Invitato;
 import unicam.filiera_agricola_ids_20242025.models.Observer.OrganizzatoreInviti;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Animatore;
-import unicam.filiera_agricola_ids_20242025.models.Evento;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Animatore;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Evento;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Venditore;
 import unicam.filiera_agricola_ids_20242025.repository.AnimatoreRepository;
 import unicam.filiera_agricola_ids_20242025.repository.EventoRepository;
 import unicam.filiera_agricola_ids_20242025.repository.VenditoreRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -38,7 +38,7 @@ public class HandlerAnimatore implements OrganizzatoreInviti {
     }
 
     //gli eventi creati dall'animatore sono modificabli o eliminabili finchè non vengono ufficialmente caricati nella piattaforma
-    public void creaEvento(int idAnimatore, String nome, String descrizione, String indirizzo, Date data, int maxPartecipanti) {
+    public Evento creaEvento(int idAnimatore, String nome, String descrizione, String indirizzo, LocalDate data, int maxPartecipanti) {
 
         Animatore animatore = animatoreRepository.findById(idAnimatore)
                 .orElseThrow(() -> new RuntimeException("Animatore non trovato"));
@@ -61,9 +61,10 @@ public class HandlerAnimatore implements OrganizzatoreInviti {
 
         animatore.getEventiCreati().add(nuovoEvento);
         eventoRepository.save(nuovoEvento);
+        return nuovoEvento;
     }
 
-    public void modificaEvento(int idAnimatore, int idEvento, String nuovoNome, String nuovaDescrizione, String nuovoIndirizzo, Date nuovaData, int nuovoMaxPartecipanti) {
+    public Evento modificaEvento(int idAnimatore, int idEvento, String nuovoNome, String nuovaDescrizione, String nuovoIndirizzo, LocalDate nuovaData, int nuovoMaxPartecipanti) {
 
         // Recupera l'animatore
         Animatore animatore = animatoreRepository.findById(idAnimatore)
@@ -100,6 +101,7 @@ public class HandlerAnimatore implements OrganizzatoreInviti {
         // Salva le modifiche
         eventoRepository.save(evento);
 
+        return evento;
     }
 
     public void eliminaEvento(int idEvento, int idAnimatore) {

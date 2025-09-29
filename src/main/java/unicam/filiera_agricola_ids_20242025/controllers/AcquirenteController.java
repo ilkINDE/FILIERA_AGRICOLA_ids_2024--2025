@@ -4,14 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import unicam.filiera_agricola_ids_20242025.models.MetodoDiPagamento.CartaDiCredito;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.Carrello;
-import unicam.filiera_agricola_ids_20242025.models.Evento;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.CarrelloItem;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Evento;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.Ordine;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.PrenotazioneEvento;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
 import unicam.filiera_agricola_ids_20242025.services.HandlerAcquirente;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -57,8 +57,8 @@ public class AcquirenteController {
     @DeleteMapping("/{idAcquirente}/carrello/rimozioneProdotti")
     public Carrello rimuoviProdottoDalCarrello(
             @PathVariable int idAcquirente,
-            @RequestParam int idProdotto,
-            @RequestParam int idPacchetto) {
+            @RequestParam(required = false) Integer idProdotto,
+            @RequestParam(required = false) Integer idPacchetto) {
         return handlerAcquirente.rimuoviItemDalCarrello(idAcquirente, idProdotto, idPacchetto);
     }
 
@@ -73,7 +73,14 @@ public class AcquirenteController {
     @PostMapping("/{idAcquirente}/acquista")
     public Ordine acquistaCarrello(
             @PathVariable int idAcquirente,
-            @RequestBody CartaDiCredito cartaDiCredito) {
+            @RequestParam long numeroCarta,
+            @RequestParam LocalDate dataScadenza,
+            @RequestParam String nomeIntestatario,
+            @RequestParam String cognomeIntestatario,
+            @RequestParam int cvv) {
+
+        CartaDiCredito cartaDiCredito = new CartaDiCredito(numeroCarta, dataScadenza, nomeIntestatario, cognomeIntestatario, cvv);
+
         return handlerAcquirente.acquistaCarrello(idAcquirente, cartaDiCredito);
     }
 

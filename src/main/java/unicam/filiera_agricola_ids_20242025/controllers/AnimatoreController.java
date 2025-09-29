@@ -4,13 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unicam.filiera_agricola_ids_20242025.DTO.InvitoRequestDTO;
-import unicam.filiera_agricola_ids_20242025.models.Invito;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Venditore;
 import unicam.filiera_agricola_ids_20242025.services.HandlerAnimatore;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Animatore;
-import unicam.filiera_agricola_ids_20242025.models.Evento;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Animatore;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Evento;
 import unicam.filiera_agricola_ids_20242025.repository.AnimatoreRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -26,32 +25,30 @@ public class AnimatoreController {
     }
 
     @PostMapping("/{idAnimatore}/crea-evento")
-    public ResponseEntity<String> creaEvento(@RequestBody Evento evento, @PathVariable int idAnimatore) {
+    public ResponseEntity<Evento> creaEvento( @PathVariable int idAnimatore,
+                                             @RequestParam String nomeEvento,
+                                             @RequestParam String descrizioneEvento,
+                                             @RequestParam String indirizzoEvento,
+                                             @RequestParam LocalDate dataEvento,
+                                             @RequestParam int maxPartecipanti) {
 
-        handlerAnimatore.creaEvento(
-                idAnimatore,
-                evento.getNome(),
-                evento.getDescrizione(),
-                evento.getIndirizzo(),
-                evento.getData(),
-                evento.getMaxPartecipanti());
+        Evento evento = handlerAnimatore.creaEvento(idAnimatore, nomeEvento, descrizioneEvento, indirizzoEvento, dataEvento, maxPartecipanti);
 
-        return ResponseEntity.ok().body( evento + " creato.");
+        return ResponseEntity.ok().body( evento );
     }
 
 
     @PutMapping("/{idAnimatore}/eventiCreati/{idEvento}/modifica")
-    public ResponseEntity<String> modificaEvento(@PathVariable int idAnimatore, @PathVariable int idEvento, @RequestBody Evento eventoModificato) {
+    public ResponseEntity<String> modificaEvento(@PathVariable int idAnimatore,
+                                                 @PathVariable int idEvento,
+                                                 @RequestParam String nomeEvento,
+                                                 @RequestParam String descrizioneEvento,
+                                                 @RequestParam String indirizzoEvento,
+                                                 @RequestParam LocalDate dataEvento,
+                                                 @RequestParam int maxPartecipanti) {
 
-        handlerAnimatore.modificaEvento(
-                idAnimatore,
-                idEvento,
-                eventoModificato.getNome(),
-                eventoModificato.getDescrizione(),
-                eventoModificato.getIndirizzo(),
-                eventoModificato.getData(),
-                eventoModificato.getMaxPartecipanti()
-        );
+        Evento evento = handlerAnimatore.modificaEvento(
+                idAnimatore, idEvento, nomeEvento, descrizioneEvento, indirizzoEvento, dataEvento, maxPartecipanti);
 
         return ResponseEntity.ok("Evento modificato con successo.");
     }
