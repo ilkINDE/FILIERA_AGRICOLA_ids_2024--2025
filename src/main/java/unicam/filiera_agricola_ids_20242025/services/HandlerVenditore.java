@@ -2,6 +2,7 @@ package unicam.filiera_agricola_ids_20242025.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import unicam.filiera_agricola_ids_20242025.models.ContenutiSocial.ContenutoSocial;
 import unicam.filiera_agricola_ids_20242025.models.Evento;
 import unicam.filiera_agricola_ids_20242025.models.Observer.Invitato;
 import unicam.filiera_agricola_ids_20242025.models.Invito;
@@ -12,10 +13,8 @@ import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Distributore
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Produttore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Trasformatore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Venditore;
-import unicam.filiera_agricola_ids_20242025.repository.InvitoRepository;
-import unicam.filiera_agricola_ids_20242025.repository.PacchettoRepository;
-import unicam.filiera_agricola_ids_20242025.repository.ProdottoRepository;
-import unicam.filiera_agricola_ids_20242025.repository.VenditoreRepository;
+import unicam.filiera_agricola_ids_20242025.repository.*;
+
 import java.util.List;
 
 @Service
@@ -25,6 +24,7 @@ public class HandlerVenditore implements Invitato {
     private final ProdottoRepository prodottoRepository;
     private final PacchettoRepository pacchettoRepository;
     private final InvitoRepository invitoRepository;
+    private final ContenutoSocialRepository contenutiSocialRepository;
     private Venditore venditore;
 
 
@@ -33,12 +33,14 @@ public class HandlerVenditore implements Invitato {
     public HandlerVenditore(VenditoreRepository venditoreRepository,
                             ProdottoRepository prodottoRepository,
                             PacchettoRepository pacchettoRepository,
-                            InvitoRepository invitoRepository
-                            ) {
+                            InvitoRepository invitoRepository,
+                            ContenutoSocialRepository contenutiSocialRepository
+    ) {
         this.venditoreRepository = venditoreRepository;
         this.prodottoRepository = prodottoRepository;
         this.pacchettoRepository = pacchettoRepository;
         this.invitoRepository = invitoRepository;
+        this.contenutiSocialRepository = contenutiSocialRepository;
     }
 
     // Metodo per recuperare i produttori dai propri Id
@@ -218,7 +220,6 @@ public class HandlerVenditore implements Invitato {
         if (invito.getVenditore().getIdVenditore() != idVenditore)
             throw new RuntimeException("Invito non appartiene al venditore");
 
-        //invito.setStato("RIFIUTATO");
         invito.rifiuta();
         invitoRepository.save(invito);
 
@@ -229,5 +230,26 @@ public class HandlerVenditore implements Invitato {
     // getter per inviti ricevuti
     public List<Invito> getInvitiRicevuti(int idVenditore) {
         return invitoRepository.findByVenditoreIdVenditore(idVenditore);
+    }
+
+    // Pubblicazione contenuto social
+    public ContenutoSocial pubblicaContenuto(int idVenditore, ContenutoSocial contenutoDaCondividere) {
+
+        Venditore venditore = venditoreRepository.findById(idVenditore)
+                .orElseThrow(() -> new RuntimeException("Venditore non trovato"));
+
+        Prodotto prodotto = prodottoRepository.findById(
+                contenutoDaCondividere.getProdottoDaPubblicare().getIdProdotto()
+        ).orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
+
+        if (contenutoDaCondividere.getProdottoDaPubblicare().getVenditore().getIdVenditore() != venditore.getIdVenditore()){
+            throw new IllegalStateException("il prodotto non appartiene al venditore");
+        }
+
+        if (contenutoDaCondividere.getProdottoDaPubblicare().getStatoProdotto() != StatoProdotto.APPROVATO) {
+            throw new IllegalStateException("Il prodotto non è caricato nella piattaforma");
+        }
+
+        return contenutiSocialRepository.save(contenutoDaCondividere);
     }
 }
