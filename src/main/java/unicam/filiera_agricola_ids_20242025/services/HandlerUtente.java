@@ -1,34 +1,37 @@
 package unicam.filiera_agricola_ids_20242025.services;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import unicam.filiera_agricola_ids_20242025.models.Evento;
+import unicam.filiera_agricola_ids_20242025.models.Piattaforma.Piattaforma;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Evento;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
 import unicam.filiera_agricola_ids_20242025.models.State.StateProdotto.StatoProdotto;
-import unicam.filiera_agricola_ids_20242025.models.Ruolo;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente.Ruolo;
 import org.springframework.stereotype.Service;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.Acquirente;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente.Utente;
 import unicam.filiera_agricola_ids_20242025.repository.*;
 
 @Service
 public class HandlerUtente {
 
+    private final Piattaforma piattaforma;
     private final UtenteRepository utenteRepository;
     private final AcquirenteRepository acquirenteRepository;
     private final ProdottoRepository prodottoRepository;
     private final PacchettoRepository pacchettoRepository;
     private final EventoRepository eventoRepository;
 
-    public HandlerUtente(UtenteRepository utenteRepository,
+    public HandlerUtente(Piattaforma piattaforma,
+                         UtenteRepository utenteRepository,
                          AcquirenteRepository acquirenteRepository,
                          ProdottoRepository prodottoRepository,
                          PacchettoRepository pacchettoRepository,
                          EventoRepository eventoRepository) {
+        this.piattaforma = piattaforma;
         this.utenteRepository = utenteRepository;
         this.acquirenteRepository = acquirenteRepository;
         this.prodottoRepository = prodottoRepository;
@@ -59,48 +62,34 @@ public class HandlerUtente {
     }
 
     //  Lista prodotti presenti in piattaforma
-    public List<Prodotto> getProdottiDisponibili() {
-        return prodottoRepository.findByStatoProdotto(StatoProdotto.APPROVATO);
-    }
+    public List<Prodotto> getProdottiDisponibili() {return piattaforma.getProdottiCaricati();}
 
     //  Dettagli singolo prodotto
-    public Prodotto esploraProdotto(int idProdotto) {
-        return prodottoRepository.findById(idProdotto)
-                .filter(p -> p.getStatoProdotto() == StatoProdotto.APPROVATO)
-                .orElse(null);
-    }
+    public Prodotto esploraProdotto(int idProdotto) {return piattaforma.getInfoProdotto(idProdotto);}
 
     //  Lista pacchetti presenti in piattaforma
     public List<Pacchetto> getPacchettiDisponibili() {
-        return pacchettoRepository.findByStatoProdotto(StatoProdotto.APPROVATO);
+        return piattaforma.getPacchettiCaricati();
     }
 
     //  Dettagli singolo pacchetto
     public Pacchetto esploraPacchetto(int idPacchetto) {
-        return pacchettoRepository.findById(idPacchetto)
-                .filter(p -> p.getStatoProdotto() == StatoProdotto.APPROVATO)
-                .orElse(null);
+        return piattaforma.getInfoPacchetto(idPacchetto);
     }
 
     //  Lista eventi caricati in piattaforma
     public List<Evento> getEventiDisponibili() {
-        return eventoRepository.findByCaricatoTrue();
+        return piattaforma.getEventiAttivi();
     }
 
     //  Dettagli singolo evento
     public Evento esploraEvento(int idEvento) {
-        return eventoRepository.findById(idEvento)
-                .filter(Evento::isCaricato)
-                .orElse(null);
+        return piattaforma.getInfoEvento(idEvento);
     }
 
-    // Restituisce gli indirizzi degli eventi caricati
-    public List<String> esploraMappa() {
-        return eventoRepository.findByCaricatoTrue()
-                .stream()
-                .map(Evento::getIndirizzo)
-                .filter(indirizzo -> indirizzo != null && !indirizzo.isBlank())
-                .toList();
+    // apre mappa OSM
+    public List<String> esploraMappaOSM() {
+        return piattaforma.getMappaOSM();
     }
 
 }

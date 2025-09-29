@@ -1,4 +1,4 @@
-package unicam.filiera_agricola_ids_20242025.models;
+package unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -23,7 +24,7 @@ public class Evento {
 
     private int maxPartecipanti;
 
-    private Date data;
+    private LocalDate data;
 
     private String descrizione;
 
@@ -33,7 +34,7 @@ public class Evento {
 
     public Evento() {}
 
-    public Evento(int id, String nome, int maxPartecipanti, Date data, String descrizione, int postiDisponibili, String indirizzo) {
+    public Evento(int id, String nome, int maxPartecipanti, LocalDate data, String descrizione, int postiDisponibili, String indirizzo) {
         this.id = id;
         this.nome = nome;
         this.maxPartecipanti = maxPartecipanti;
@@ -66,7 +67,7 @@ public class Evento {
     }
 
 
-    public Date getData() {
+    public LocalDate getData() {
         return data;
     }
 
@@ -102,7 +103,7 @@ public class Evento {
     }
 
 
-    public void setData(Date data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
 
@@ -120,7 +121,4 @@ public class Evento {
     public void setIndirizzo(String indirizzo) {
         this.indirizzo = indirizzo;
     }
-
-
-
 }

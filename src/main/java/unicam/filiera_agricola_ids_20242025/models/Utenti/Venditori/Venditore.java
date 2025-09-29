@@ -2,9 +2,9 @@ package unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import unicam.filiera_agricola_ids_20242025.models.Invito;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Invito;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente.Utente;
 
 import java.util.ArrayList;
 import java.util.List;

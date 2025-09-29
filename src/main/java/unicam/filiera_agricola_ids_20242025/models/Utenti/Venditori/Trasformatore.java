@@ -2,7 +2,7 @@ package unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori;
 
 import jakarta.persistence.Entity;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.ProdottoTrasformatore;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente.Utente;
 
 import java.util.List;
 

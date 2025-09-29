@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import unicam.filiera_agricola_ids_20242025.DTO.*;
 import unicam.filiera_agricola_ids_20242025.services.HandlerRichiestaRuolo;
-import unicam.filiera_agricola_ids_20242025.models.RichiestaRuolo;
-import unicam.filiera_agricola_ids_20242025.models.Ruolo;
 
 @RestController
 @RequestMapping("/richieste-ruolo")

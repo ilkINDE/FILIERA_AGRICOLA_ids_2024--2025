@@ -1,9 +1,8 @@
-package unicam.filiera_agricola_ids_20242025.models;
+package unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import unicam.filiera_agricola_ids_20242025.models.State.StateInvito.*;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Animatore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Venditore;
 
 @Entity

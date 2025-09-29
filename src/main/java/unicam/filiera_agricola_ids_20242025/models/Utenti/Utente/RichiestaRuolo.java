@@ -1,10 +1,9 @@
-package unicam.filiera_agricola_ids_20242025.models;
+package unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import unicam.filiera_agricola_ids_20242025.models.Amministratori.Gestore;
 import unicam.filiera_agricola_ids_20242025.models.State.StateRichiesta.*;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 
 @Entity
     public class RichiestaRuolo{

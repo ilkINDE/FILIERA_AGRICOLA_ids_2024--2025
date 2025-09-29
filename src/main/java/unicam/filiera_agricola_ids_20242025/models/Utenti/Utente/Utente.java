@@ -1,7 +1,6 @@
-package unicam.filiera_agricola_ids_20242025.models.Utenti;
+package unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
 
 import jakarta.persistence.*;
-import unicam.filiera_agricola_ids_20242025.models.Ruolo;
 
 import java.time.LocalDate;
 import java.util.HashSet;

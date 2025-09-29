@@ -1,6 +1,6 @@
 package unicam.filiera_agricola_ids_20242025.models.State.StateRichiesta;
 
-import unicam.filiera_agricola_ids_20242025.models.RichiestaRuolo;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente.RichiestaRuolo;
 
 public class RifiutataState implements RichiestaState {
 

@@ -2,7 +2,7 @@ package unicam.filiera_agricola_ids_20242025.models.Amministratori;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import unicam.filiera_agricola_ids_20242025.models.RichiestaRuolo;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente.RichiestaRuolo;
 
 import java.util.List;
 

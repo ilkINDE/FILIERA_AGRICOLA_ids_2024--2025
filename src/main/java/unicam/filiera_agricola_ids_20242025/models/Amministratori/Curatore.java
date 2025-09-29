@@ -1,10 +1,7 @@
 package unicam.filiera_agricola_ids_20242025.models.Amministratori;
 
 import jakarta.persistence.*;
-import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
-
-import java.util.List;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente.Utente;
 
 @Entity
 public class Curatore {

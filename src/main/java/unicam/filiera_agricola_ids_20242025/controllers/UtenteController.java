@@ -3,11 +3,11 @@ package unicam.filiera_agricola_ids_20242025.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import unicam.filiera_agricola_ids_20242025.models.Evento;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Evento;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
 import unicam.filiera_agricola_ids_20242025.services.HandlerUtente;
-import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente.Utente;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -80,9 +80,9 @@ public class UtenteController {
     }
 
     // accede alla mappa
-    @GetMapping("/mappa")
-    public ResponseEntity<List<String>> esploraMappa() {
-        return ResponseEntity.ok(handlerUtente.esploraMappa());
+    @GetMapping("/mappaOSM")
+    public ResponseEntity<List<String>> esploraMappaOSM() {
+        return ResponseEntity.ok(handlerUtente.esploraMappaOSM());
     }
 
 }

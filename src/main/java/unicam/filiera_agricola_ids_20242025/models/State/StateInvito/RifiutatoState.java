@@ -1,6 +1,6 @@
 package unicam.filiera_agricola_ids_20242025.models.State.StateInvito;
 
-import unicam.filiera_agricola_ids_20242025.models.Invito;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Invito;
 
 public class RifiutatoState implements InvitoState {
 
