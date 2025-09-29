@@ -28,7 +28,6 @@ public class HandlerVenditore implements Invitato {
     private Venditore venditore;
 
 
-
     @Autowired
     public HandlerVenditore(VenditoreRepository venditoreRepository,
                             ProdottoRepository prodottoRepository,
@@ -53,6 +52,7 @@ public class HandlerVenditore implements Invitato {
                 .toList();
     }
 
+    // Creazione prodotto di un produttore
     public Prodotto creaProdottoProduttore(int idVenditore, String nome, double prezzo, String descrizione, String metodoColtivazione) {
         Venditore venditore = venditoreRepository.findById(idVenditore)
                 .orElseThrow(() -> new RuntimeException("Venditore non trovato"));
@@ -64,6 +64,7 @@ public class HandlerVenditore implements Invitato {
         return prodottoRepository.save(prodottoProduttore);
     }
 
+    // Creazione prodotto di un trasformatore
     public Prodotto creaProdottoTrasformatore(int idVenditore, String nome, double prezzo, String descrizione, String processo, List<Produttore> produttoriAssociati) {
         Venditore venditore = venditoreRepository.findById(idVenditore)
                 .orElseThrow(() -> new RuntimeException("Venditore non trovato"));
@@ -75,6 +76,7 @@ public class HandlerVenditore implements Invitato {
         return prodottoRepository.save(prodottoTrafsormatore);
     }
 
+    // Creazione prodotto di un distributore di tipicità
     public Prodotto creaProdottoDistributore(int idVenditore, String nome, double prezzo, String descrizione) {
         Venditore venditore = venditoreRepository.findById(idVenditore)
                 .orElseThrow(() -> new RuntimeException("Venditore non trovato"));
@@ -86,6 +88,7 @@ public class HandlerVenditore implements Invitato {
         return prodottoRepository.save(prodottoDistributore);
     }
 
+    // creazione di un pacchetto
     public Pacchetto creaPacchetto(int idVenditore, String nome, double prezzo, String descrizione, List<Integer> idProdotti) {
         Venditore venditore = venditoreRepository.findById(idVenditore)
                 .orElseThrow(() -> new RuntimeException("Venditore non trovato"));
@@ -102,6 +105,7 @@ public class HandlerVenditore implements Invitato {
         return pacchettoRepository.save(pacchetto);
     }
 
+    // eliminazione di un prodotto creato
     public void eliminaProdotto(int idVenditore, int idProdotto) {
         Venditore venditore = venditoreRepository.findById(idVenditore)
                 .orElseThrow(() -> new RuntimeException("Venditore non trovato"));
@@ -117,6 +121,7 @@ public class HandlerVenditore implements Invitato {
         prodottoRepository.delete(prodotto);
     }
 
+    // eliminazione di un pacchetto creato
     public void eliminaPacchetto(int idVenditore, int idPacchetto) {
 
         Venditore venditore = venditoreRepository.findById(idVenditore)
@@ -132,6 +137,7 @@ public class HandlerVenditore implements Invitato {
         pacchettoRepository.delete(pacchetto);
     }
 
+    // inoltra al curatore la richiesta di caricamento sulla piattaforma di un prodotto creato
     public Prodotto richiestaCaricamentoProdotto(int idProdotto, int idVenditore) {
 
         Venditore venditore = venditoreRepository.findById(idVenditore)
@@ -148,6 +154,7 @@ public class HandlerVenditore implements Invitato {
         return prodottoRepository.save(prodotto);
     }
 
+    // inoltra al curatore la richiesta di caricamento sulla piattaforma di un pacchetto creato
     public Pacchetto richiestaCaricamentoPacchetto(int idPacchetto, int idVenditore) {
 
         Venditore venditore = venditoreRepository.findById(idVenditore)
@@ -233,23 +240,25 @@ public class HandlerVenditore implements Invitato {
     }
 
     // Pubblicazione contenuto social
-    public ContenutoSocial pubblicaContenuto(int idVenditore, ContenutoSocial contenutoDaCondividere) {
+    public ContenutoSocial pubblicaContenuto(int idVenditore, int idProdotto, String descrizioneContenuto) {
 
         Venditore venditore = venditoreRepository.findById(idVenditore)
                 .orElseThrow(() -> new RuntimeException("Venditore non trovato"));
 
-        Prodotto prodotto = prodottoRepository.findById(
-                contenutoDaCondividere.getProdottoDaPubblicare().getIdProdotto()
-        ).orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
+        Prodotto prodotto = prodottoRepository.findById(idProdotto)
+                .orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
 
-        if (contenutoDaCondividere.getProdottoDaPubblicare().getVenditore().getIdVenditore() != venditore.getIdVenditore()){
+        if (prodotto.getVenditore().getIdVenditore() != venditore.getIdVenditore()){
             throw new IllegalStateException("il prodotto non appartiene al venditore");
         }
 
-        if (contenutoDaCondividere.getProdottoDaPubblicare().getStatoProdotto() != StatoProdotto.APPROVATO) {
+        if (prodotto.getStatoProdotto() != StatoProdotto.APPROVATO) {
             throw new IllegalStateException("Il prodotto non è caricato nella piattaforma");
         }
 
+        ContenutoSocial contenutoDaCondividere = new ContenutoSocial(prodotto, descrizioneContenuto);
+
         return contenutiSocialRepository.save(contenutoDaCondividere);
     }
+
 }

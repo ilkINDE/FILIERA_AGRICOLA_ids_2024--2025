@@ -3,6 +3,7 @@ package unicam.filiera_agricola_ids_20242025.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import unicam.filiera_agricola_ids_20242025.models.ContenutiSocial.ContenutoSocial;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Evento;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
@@ -77,6 +78,12 @@ public class UtenteController {
     @GetMapping("/esploraEvento/{idEvento}")
     public ResponseEntity<Evento> esploraEvento(@PathVariable int idEvento) {
         return ResponseEntity.ok(handlerUtente.esploraEvento(idEvento));
+    }
+
+    // mostra tutti contenuti pubblicati su prodotti caricati
+    @GetMapping("/ContenutiPubblicati")
+    public ResponseEntity<List<ContenutoSocial>> contenutiPubblicati() {
+        return ResponseEntity.ok(handlerUtente.getContenutiPubblicati());
     }
 
     // accede alla mappa

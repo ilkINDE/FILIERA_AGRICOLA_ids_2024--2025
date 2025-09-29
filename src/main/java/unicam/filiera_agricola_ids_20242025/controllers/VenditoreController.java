@@ -3,10 +3,12 @@ package unicam.filiera_agricola_ids_20242025.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import unicam.filiera_agricola_ids_20242025.models.ContenutiSocial.ContenutoSocial;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Invito;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Produttore;
+import unicam.filiera_agricola_ids_20242025.repository.ProdottoRepository;
 import unicam.filiera_agricola_ids_20242025.services.HandlerVenditore;
 
 import java.util.List;
@@ -16,12 +18,13 @@ import java.util.List;
 public class VenditoreController {
 
         private final HandlerVenditore handlerVenditore;
+    private final ProdottoRepository prodottoRepository;
 
 
-        @Autowired
-        public VenditoreController(HandlerVenditore handlerVenditore) {
+    @Autowired
+        public VenditoreController(HandlerVenditore handlerVenditore, ProdottoRepository prodottoRepository) {
             this.handlerVenditore = handlerVenditore;
-
+        this.prodottoRepository = prodottoRepository;
     }
 
     // Creazione prodotto da Produttore
@@ -44,9 +47,8 @@ public class VenditoreController {
             @RequestParam double prezzo,
             @RequestParam String descrizione,
             @RequestParam String processoDiTrasformazione,
-            @RequestBody List<Integer> idProduttoriAssociati) {
+            @RequestBody  (required = false) List<Integer> idProduttoriAssociati) {
 
-        // Recupero lista Produttori tramite handler
         List<Produttore> produttoriAssociati = handlerVenditore.getProduttoriById(idProduttoriAssociati);
 
         Prodotto prodotto = handlerVenditore.creaProdottoTrasformatore(
@@ -94,6 +96,7 @@ public class VenditoreController {
         return ResponseEntity.ok().body("prodotto eliminato con successo");
     }
 
+    // Richiesta caricamento di un prodotto sulla piattaforma
     @PostMapping("/{idVenditore}/prodottiCreati/{idProdotto}/richiediCaricamento")
 
     public ResponseEntity<Prodotto> richiestaCaricamentoProdotto(@PathVariable int idProdotto, @PathVariable  int idVenditore) {
@@ -102,6 +105,7 @@ public class VenditoreController {
     }
 
 
+    // Richiesta caricamento di un pacchetto sulla piattaforma
     @PostMapping("/{idVenditore}/pacchettiCreati/{idPacchetto}/richiediCaricamento")
 
     public ResponseEntity<Pacchetto> richiestaCaricamentoPacchetto(@PathVariable int idPacchetto, @PathVariable  int idVenditore) {
@@ -109,7 +113,7 @@ public class VenditoreController {
         return ResponseEntity.ok(handlerVenditore.richiestaCaricamentoPacchetto(idPacchetto, idVenditore));
     }
 
-    // 🔹 Accetta invito
+    // Accetta invito
     @PutMapping("/{idVenditore}/inviti/{idInvito}/accetta")
     public ResponseEntity<String> accettaInvito(@PathVariable int idVenditore,
                                                 @PathVariable int idInvito) {
@@ -118,7 +122,7 @@ public class VenditoreController {
         return ResponseEntity.ok("Invito accettato.");
     }
 
-    // 🔹 Rifiuta invito
+    // Rifiuta invito
     @PutMapping("/{idVenditore}/inviti/{idInvito}/rifiuta")
     public ResponseEntity<String> rifiutaInvito(@PathVariable int idVenditore,
                                                 @PathVariable int idInvito) {
@@ -127,10 +131,19 @@ public class VenditoreController {
         return ResponseEntity.ok("Invito rifiutato.");
     }
 
-    // 🔹 Lista inviti ricevuti
+    // Lista inviti ricevuti
     @GetMapping("/{idVenditore}/inviti")
     public ResponseEntity<List<Invito>> getInvitiRicevuti(@PathVariable int idVenditore) {
         return ResponseEntity.ok(handlerVenditore.getInvitiRicevuti(idVenditore));
+    }
+
+    // pubblica un contenuto social su un prodotto caricato
+    @PostMapping("/{idVenditore}/pubblicaContenuto")
+    public ResponseEntity<ContenutoSocial> pubblicaContenuto(@PathVariable int idVenditore,
+                                                             @RequestParam int idProdottoDaPubblicare,
+                                                             @RequestParam String descrizioneContenutoSocial) {
+
+        return ResponseEntity.ok(handlerVenditore.pubblicaContenuto(idVenditore, idProdottoDaPubblicare, descrizioneContenutoSocial));
     }
 }
 

@@ -26,6 +26,7 @@ public class HandlerCuratore {
         this.pacchettoRepository = pacchettoRepository;
     }
 
+    // lista di prodotti in attesa di approvazione
     public List<Prodotto> getProdottiInAttesa(int idCuratore) {
 
         Curatore curatore = curatoreRepository.findById(idCuratore)
@@ -34,6 +35,7 @@ public class HandlerCuratore {
         return prodottoRepository.findByStatoProdotto(StatoProdotto.IN_REVISIONE);
     }
 
+    // lista di pacchetti in attesa di approvazione
     public List<Pacchetto> getPacchettiInAttesa(int idCuratore) {
 
         Curatore curatore = curatoreRepository.findById(idCuratore)
@@ -42,6 +44,7 @@ public class HandlerCuratore {
         return pacchettoRepository.findByStatoProdotto(StatoProdotto.IN_REVISIONE);
     }
 
+    // approva e carica un prodotto sulla piattaforma
     public Prodotto approvaProdotto(int idCuratore, int idProdotto) {
 
         Curatore curatore = curatoreRepository.findById(idCuratore)
@@ -54,6 +57,7 @@ public class HandlerCuratore {
         return prodottoRepository.save(prodotto);
     }
 
+    // approva e carica un pacchetto sulla piattaforma
     public Pacchetto approvaPacchetto(int idCuratore, int idPacchetto) {
 
         Curatore curatore = curatoreRepository.findById(idCuratore)
@@ -70,6 +74,7 @@ public class HandlerCuratore {
         return pacchettoRepository.save(pacchetto);
     }
 
+    // rifiuta un prodotto
     public Prodotto rifiutaProdotto(int idCuratore, int idProdotto) {
 
         Curatore curatore = curatoreRepository.findById(idCuratore)
@@ -82,6 +87,7 @@ public class HandlerCuratore {
         return prodottoRepository.save(prodotto);
     }
 
+    // rifiuta un pacchetto
     public Pacchetto rifiutaPacchetto(int idCuratore, int idPacchetto) {
 
         Curatore curatore = curatoreRepository.findById(idCuratore)

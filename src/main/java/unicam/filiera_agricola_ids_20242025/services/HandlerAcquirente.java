@@ -185,21 +185,18 @@ public class HandlerAcquirente {
         Evento evento = eventoRepository.findById(idEvento)
                 .orElseThrow(() -> new RuntimeException("Evento non trovato"));
 
-        //  Controllo disponibilità
         if (evento.getPostiDisponibili() < posti) {
             throw new RuntimeException("Posti insufficienti per l'evento");
         }
-
 
         if (posti <= 0) {
             throw new RuntimeException("Numero di posti non valido");
         }
 
         PrenotazioneEvento prenotazione = new PrenotazioneEvento(acquirente, evento, posti);
-        //  Aggiorna i posti rimasti
+
         evento.setPostiDisponibili(evento.getPostiDisponibili() - posti);
 
-        //  Salva evento aggiornato
         eventoRepository.save(evento);
         return prenotazioneEventoRepository.save(prenotazione);
     }

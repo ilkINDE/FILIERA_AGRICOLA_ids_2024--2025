@@ -30,6 +30,7 @@ public class HandlerRichiestaRuolo {
         this.objectMapper = objectMapper;
     }
 
+    //  crea una richiesta di aggiunta ruolo come Produttore
     public RichiestaRuolo creaRichiestaProduttore(int idUtente, RichiestaProduttoreDTO dto) {
 
             Utente utente = utenteRepository.findById(idUtente)
@@ -67,6 +68,7 @@ public class HandlerRichiestaRuolo {
         return richiestaRuoloRepository.save(richiesta);
     }
 
+    //crea una richiesta di aggiunta ruolo come Trasformatore
     public RichiestaRuolo creaRichiestaTrasformatore(int idUtente, RichiestaTrasformatoreDTO dto) {
 
         Utente utente = utenteRepository.findById(idUtente)
@@ -102,6 +104,7 @@ public class HandlerRichiestaRuolo {
         return richiestaRuoloRepository.save(richiesta);
     }
 
+    //crea una richiesta di aggiunta ruolo come distributore di tipicità
     public RichiestaRuolo creaRichiestaDistributore(int idUtente, RichiestaDistributoreDTO dto) {
 
         Utente utente = utenteRepository.findById(idUtente)
@@ -137,7 +140,7 @@ public class HandlerRichiestaRuolo {
         return richiestaRuoloRepository.save(richiesta);
     }
 
-
+    //crea una richiesta di aggiunta ruolo come animatore della filiera
     public RichiestaRuolo creaRichiestaAnimatore(int idUtente) {
 
         Utente utente = utenteRepository.findById(idUtente)
@@ -167,6 +170,7 @@ public class HandlerRichiestaRuolo {
         return richiestaRuoloRepository.save(richiesta);
     }
 
+    //crea una richiesta di aggiunta ruolo come curatore
     public RichiestaRuolo creaRichiestaCuratore(int idUtente) {
 
         Utente utente = utenteRepository.findById(idUtente)

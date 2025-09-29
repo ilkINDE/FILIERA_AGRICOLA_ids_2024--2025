@@ -42,7 +42,8 @@ public class HandlerGestore {
         this.curatoreRepository = curatoreRepository;
         this.objectMapper = objectMapper;
     }
-    //Restituisce il gestore
+
+    // Inizializza gestore all'avvio dell'applicazione
     @PostConstruct
     public void initGestore() {
         if (gestoreRepository.findById(1).isEmpty()) {
@@ -124,7 +125,7 @@ public class HandlerGestore {
          richiestaRuoloRepository.save(richiesta);
      }
 
-    //Rifiuta una richiesta di ruolo.
+    // Rifiuta una richiesta di ruolo.
     public void rifiutaRichiesta(int idRichiesta) {
         RichiestaRuolo richiesta = richiestaRuoloRepository.findById(idRichiesta)
                 .orElseThrow(() -> new RuntimeException("Richiesta non trovata"));

@@ -4,11 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import unicam.filiera_agricola_ids_20242025.models.ContenutiSocial.ContenutoSocial;
 import unicam.filiera_agricola_ids_20242025.models.Piattaforma.Piattaforma;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Evento;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
-import unicam.filiera_agricola_ids_20242025.models.State.StateProdotto.StatoProdotto;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Utente.Ruolo;
 import org.springframework.stereotype.Service;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.Acquirente;
@@ -83,13 +83,12 @@ public class HandlerUtente {
     }
 
     //  Dettagli singolo evento
-    public Evento esploraEvento(int idEvento) {
-        return piattaforma.getInfoEvento(idEvento);
-    }
+    public Evento esploraEvento(int idEvento) {return piattaforma.getInfoEvento(idEvento);}
 
-    // apre mappa OSM
-    public List<String> esploraMappaOSM() {
-        return piattaforma.getMappaOSM();
-    }
+    // Elenco contenuti social pubblicati su prodotti caricati sulla piattaforma
+    public List<ContenutoSocial> getContenutiPubblicati() { return piattaforma.getContenutiPubblicati();}
+
+    // Apre mappa OSM
+    public List<String> esploraMappaOSM() {return piattaforma.getMappaOSM();}
 
 }

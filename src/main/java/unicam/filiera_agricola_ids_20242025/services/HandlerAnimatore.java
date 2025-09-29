@@ -37,14 +37,12 @@ public class HandlerAnimatore implements OrganizzatoreInviti {
         this.handlerVenditore = handlerVenditore;
     }
 
-    //gli eventi creati dall'animatore sono modificabli o eliminabili finchè non vengono ufficialmente caricati nella piattaforma
+    // creau un evento, gli eventi creati dall'animatore sono modificabli o eliminabili finchè non vengono ufficialmente caricati nella piattaforma
     public Evento creaEvento(int idAnimatore, String nome, String descrizione, String indirizzo, LocalDate data, int maxPartecipanti) {
 
         Animatore animatore = animatoreRepository.findById(idAnimatore)
                 .orElseThrow(() -> new RuntimeException("Animatore non trovato"));
 
-
-        //  Controlla che non ci sia già un evento in quel luogo e data
         if (eventoRepository.existsByIndirizzoIgnoreCaseAndData(indirizzo, data)) {
             throw new RuntimeException("Il luogo non è disponibile alla data selezionata.");
         }
@@ -64,33 +62,28 @@ public class HandlerAnimatore implements OrganizzatoreInviti {
         return nuovoEvento;
     }
 
+    // modifica i dati di un evento creato
     public Evento modificaEvento(int idAnimatore, int idEvento, String nuovoNome, String nuovaDescrizione, String nuovoIndirizzo, LocalDate nuovaData, int nuovoMaxPartecipanti) {
 
-        // Recupera l'animatore
         Animatore animatore = animatoreRepository.findById(idAnimatore)
                 .orElseThrow(() -> new RuntimeException("Animatore non trovato"));
 
-        // Recupera l'evento da modificare
         Evento evento = eventoRepository.findById(idEvento)
                 .orElseThrow(() -> new RuntimeException("Evento non trovato"));
 
-        // Controlla che l'evento appartenga all'animatore
         if (!animatore.getEventiCreati().contains(evento)) {
             throw new RuntimeException("L'evento non appartiene a questo animatore.");
         }
 
-        // Verifica se l'evento è già stato caricato sulla piattaforma
         if (evento.isCaricato()) {
             throw new RuntimeException("Evento già caricato sulla piattaforma: non modificabile.");
         }
 
-        // Verifica disponibilità del luogo e data (escludendo l'evento stesso)
         List<Evento> conflitti = eventoRepository.findConflitti(nuovoIndirizzo, nuovaData, evento.getId());
         if (!conflitti.isEmpty()) {
             throw new RuntimeException("Il luogo non è disponibile alla data selezionata.");
         }
 
-        // Modifica i campi dell'evento
         evento.setNome(nuovoNome);
         evento.setDescrizione(nuovaDescrizione);
         evento.setIndirizzo(nuovoIndirizzo);
@@ -98,23 +91,20 @@ public class HandlerAnimatore implements OrganizzatoreInviti {
         evento.setMaxPartecipanti(nuovoMaxPartecipanti);
         evento.setPostiDisponibili(nuovoMaxPartecipanti); // aggiorna anche i posti disponibili
 
-        // Salva le modifiche
         eventoRepository.save(evento);
 
         return evento;
     }
 
+    // elimina un evento creato in precedenza
     public void eliminaEvento(int idEvento, int idAnimatore) {
 
-        // Recupera l'animatore
         Animatore animatore = animatoreRepository.findById(idAnimatore).
                 orElseThrow(() -> new RuntimeException("Animatore inesistente"));
 
-        // Recupera l'evento da eliminare
         Evento evento = eventoRepository.findById(idEvento).
                 orElseThrow(() -> new RuntimeException("Evento inesistente"));
 
-        // Verifica che l'evento appartenga all'animatore
         if (!animatore.getEventiCreati().contains(evento)) {
             throw new RuntimeException("L'evento non appartiene a questo animatore.");
         }
@@ -126,22 +116,19 @@ public class HandlerAnimatore implements OrganizzatoreInviti {
         eventoRepository.delete(evento);
     }
 
-    //una volta caricato l'evento non potrà più essere modificato o eliminato
+    // carica un evento sulla piattaforma, una volta caricato l'evento non potrà più essere modificato o eliminato
     public void caricaEvento(int idEvento, int idAnimatore) {
 
-        // Recupera l'animatore
         Animatore animatore = animatoreRepository.findById(idAnimatore).
                 orElseThrow(() -> new RuntimeException("Animatore inesistente"));
 
-        // Recupera l'evento
         Evento evento = eventoRepository.findById(idEvento).
                 orElseThrow(() -> new RuntimeException("Evento inesistente"));
 
-        // Verifica che l'evento appartenga all'animatore
         if (!animatore.getEventiCreati().contains(evento)) {
             throw new RuntimeException("L'evento non appartiene a questo animatore.");
         }
-        // Verifica se l'evento è già stato caricato sulla piattaforma
+
         if (evento.isCaricato()) {
             throw new RuntimeException("Evento già caricato sulla piattaforma");
         }
@@ -170,6 +157,7 @@ public class HandlerAnimatore implements OrganizzatoreInviti {
         }
     }
 
+    // inoltra gli inviti
     public void inviaInviti(int idAnimatore, int idEvento, List<Integer> venditoriIds) {
         Animatore animatore = animatoreRepository.findById(idAnimatore)
                 .orElseThrow(() -> new RuntimeException("Animatore non trovato"));
@@ -177,11 +165,13 @@ public class HandlerAnimatore implements OrganizzatoreInviti {
         Evento evento = eventoRepository.findById(idEvento)
                 .orElseThrow(() -> new RuntimeException("Evento non trovato"));
 
+        if  (!animatore.getEventiCreati().contains(evento)) {
+            throw new RuntimeException("L'evento non appartiene a questo animatore");
+        }
 
         if (evento.isCaricato()) {
             throw new RuntimeException("Non è possibile invitare venditori a un evento già caricato sulla piattaforma.");
         }
-
 
         for (Integer venditoreId : venditoriIds) {
             Venditore venditore = venditoreRepository.findById(venditoreId)

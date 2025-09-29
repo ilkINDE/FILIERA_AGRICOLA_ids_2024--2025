@@ -3,7 +3,6 @@ package unicam.filiera_agricola_ids_20242025.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import unicam.filiera_agricola_ids_20242025.DTO.InvitoRequestDTO;
 import unicam.filiera_agricola_ids_20242025.services.HandlerAnimatore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Animatore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Evento;
@@ -70,19 +69,19 @@ public class AnimatoreController {
     }
 
     @DeleteMapping("/{idAnimatore}/eventiCreati/{idEvento}/eliminaEvento")
-    public ResponseEntity<String> eliminaEvento(@PathVariable int idEvento, @PathVariable int idAnimatore){
+    public ResponseEntity<String> eliminaEvento(@PathVariable int idEvento,
+                                                @PathVariable int idAnimatore){
 
         handlerAnimatore.eliminaEvento(idEvento, idAnimatore);
         return ResponseEntity.ok().body(" evento eliminato. ");
     }
 
     @PostMapping("/{idAnimatore}/eventi/{idEvento}/invia-inviti")
-    public ResponseEntity<String> inviaInviti(@RequestBody InvitoRequestDTO request) {
-        handlerAnimatore.inviaInviti(
-                request.getIdAnimatore(),
-                request.getIdEvento(),
-                request.getVenditoriIds()
-        );
+    public ResponseEntity<String> inviaInviti(@PathVariable  int idAnimatore,
+                                              @PathVariable int idEvento,
+                                              @RequestBody List<Integer> idvenditori) {
+
+        handlerAnimatore.inviaInviti(idAnimatore, idEvento, idvenditori);
         return ResponseEntity.ok().body("Inviti inviati con successo.");
     }
 }
