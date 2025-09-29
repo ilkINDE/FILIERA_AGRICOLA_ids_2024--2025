@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import unicam.filiera_agricola_ids_20242025.models.Observer.Invitato;
 import unicam.filiera_agricola_ids_20242025.models.Observer.OrganizzatoreInviti;
+import unicam.filiera_agricola_ids_20242025.models.State.StateInvito.StatoInvito;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Animatore;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Evento;
+import unicam.filiera_agricola_ids_20242025.models.Utenti.AnimatoreDellaFiliera.Invito;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Venditori.Venditore;
 import unicam.filiera_agricola_ids_20242025.repository.AnimatoreRepository;
 import unicam.filiera_agricola_ids_20242025.repository.EventoRepository;
+import unicam.filiera_agricola_ids_20242025.repository.InvitoRepository;
 import unicam.filiera_agricola_ids_20242025.repository.VenditoreRepository;
 
 import java.time.LocalDate;
@@ -26,18 +29,22 @@ public class HandlerAnimatore implements OrganizzatoreInviti {
 
     private final HandlerVenditore handlerVenditore;
 
+    private final InvitoRepository invitoRepository;
+
     // Lista invitati (observer)
     private final List<Invitato> invitati = new ArrayList<>();
 
+
     @Autowired
-    public HandlerAnimatore(AnimatoreRepository animatoreRepository, EventoRepository eventoRepository, VenditoreRepository venditoreRepository, HandlerVenditore handlerVenditore) {
+    public HandlerAnimatore(AnimatoreRepository animatoreRepository, EventoRepository eventoRepository, VenditoreRepository venditoreRepository, HandlerVenditore handlerVenditore, InvitoRepository invitoRepository) {
         this.animatoreRepository = animatoreRepository;
         this.eventoRepository = eventoRepository;
         this.venditoreRepository = venditoreRepository;
         this.handlerVenditore = handlerVenditore;
+        this.invitoRepository = invitoRepository;
     }
 
-    // creau un evento, gli eventi creati dall'animatore sono modificabli o eliminabili finchè non vengono ufficialmente caricati nella piattaforma
+    // crea un evento, gli eventi creati dall'animatore sono modificabli o eliminabili finchè non vengono ufficialmente caricati nella piattaforma
     public Evento creaEvento(int idAnimatore, String nome, String descrizione, String indirizzo, LocalDate data, int maxPartecipanti) {
 
         Animatore animatore = animatoreRepository.findById(idAnimatore)
@@ -183,4 +190,32 @@ public class HandlerAnimatore implements OrganizzatoreInviti {
 
         notificaInvitati(evento, animatore);
     }
+
+
+    // Restituisce tutti gli inviti accettati dal Venditore
+    public List<Invito> getInvitiAccettati(int idEvento, int idAnimatore) {
+        Evento evento = eventoRepository.findById(idEvento)
+                .orElseThrow(() -> new RuntimeException("Evento non trovato"));
+
+        Animatore animatore = animatoreRepository.findById(idAnimatore)
+                .orElseThrow(() -> new RuntimeException("Animatore non trovato"));
+
+        if (evento.isCaricato()) {
+            throw new RuntimeException("L'evento è già caricato sulla piattaforma");
+        }
+
+        if  (!animatore.getEventiCreati().contains(evento)) {
+            throw new RuntimeException("L'evento non appartiene a questo animatore");
+        }
+
+        List<Invito> invitiAccettati = invitoRepository.findByEvento_IdAndStatoInvito(idEvento, StatoInvito.ACCETTATO);
+
+        if (invitiAccettati.isEmpty()) {
+            throw new RuntimeException("Nessun invito accettato per questo evento.");
+        }
+
+        return invitiAccettati;
+    }
+
+
 }
