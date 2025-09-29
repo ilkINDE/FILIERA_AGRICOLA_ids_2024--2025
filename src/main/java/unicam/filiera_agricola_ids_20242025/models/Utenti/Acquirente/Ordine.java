@@ -1,6 +1,7 @@
 package unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente;
 
 import jakarta.persistence.*;
+import unicam.filiera_agricola_ids_20242025.models.MetodoDiPagamento.CartaDiCredito;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +22,7 @@ public class Ordine {
     private List<CarrelloItem> items;
 
     private LocalDateTime dataAcquisto;
+
     private double totale;
 
     public Ordine() {}
@@ -55,4 +57,5 @@ public class Ordine {
     private double calcolaTotale() {
         return items.stream().mapToDouble(CarrelloItem::getPrezzoTotale).sum();
     }
+
 }

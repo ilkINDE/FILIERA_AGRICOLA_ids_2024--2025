@@ -3,12 +3,14 @@ package unicam.filiera_agricola_ids_20242025.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import unicam.filiera_agricola_ids_20242025.models.*;
+import unicam.filiera_agricola_ids_20242025.models.MetodoDiPagamento.CartaDiCredito;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Pacchetto;
 import unicam.filiera_agricola_ids_20242025.models.Prodotti.Prodotto;
 import unicam.filiera_agricola_ids_20242025.models.State.StateProdotto.StatoProdotto;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.*;
 import unicam.filiera_agricola_ids_20242025.repository.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -132,7 +134,8 @@ public class HandlerAcquirente {
     }
 
     //  Acquista tutto il carrello → genera un Ordine
-    public Ordine acquistaCarrello(int idAcquirente) {
+    public Ordine acquistaCarrello(int idAcquirente, CartaDiCredito cartaDiCredito) {
+
         Acquirente acquirente = acquirenteRepository.findById(idAcquirente)
                 .orElseThrow(() -> new RuntimeException("Acquirente non trovato"));
 
@@ -140,6 +143,18 @@ public class HandlerAcquirente {
 
         if (carrello.getItems().isEmpty()) {
             throw new RuntimeException("Il carrello è vuoto");
+        }
+
+        if (cartaDiCredito.getDataScadenza().isBefore(LocalDate.now())) {
+            throw new RuntimeException("La carta è scaduta");
+        }
+
+        if (String.valueOf(cartaDiCredito.getNumeroCarta()).length() != 16) {
+            throw new RuntimeException("numero carta non valido");
+        }
+
+        if (String.valueOf(cartaDiCredito.getCvv()).length() != 3) {
+            throw new RuntimeException("numero cvv non valido");
         }
 
         // Crea nuove copie degli item per l'ordine

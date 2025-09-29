@@ -2,6 +2,7 @@ package unicam.filiera_agricola_ids_20242025.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import unicam.filiera_agricola_ids_20242025.models.MetodoDiPagamento.CartaDiCredito;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.Carrello;
 import unicam.filiera_agricola_ids_20242025.models.Evento;
 import unicam.filiera_agricola_ids_20242025.models.Utenti.Acquirente.CarrelloItem;
@@ -70,8 +71,10 @@ public class AcquirenteController {
 
     //  Acquista i prodotti nel carrello
     @PostMapping("/{idAcquirente}/acquista")
-    public Ordine acquistaCarrello(@PathVariable int idAcquirente) {
-        return handlerAcquirente.acquistaCarrello(idAcquirente);
+    public Ordine acquistaCarrello(
+            @PathVariable int idAcquirente,
+            @RequestBody CartaDiCredito cartaDiCredito) {
+        return handlerAcquirente.acquistaCarrello(idAcquirente, cartaDiCredito);
     }
 
     // Mostra solo gli eventi caricati in piattaforma
