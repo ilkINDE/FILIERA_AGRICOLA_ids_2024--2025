@@ -150,6 +150,9 @@ public class HandlerVenditore implements Invitato {
             throw new IllegalArgumentException("Il prodotto non appartiene al venditore");
         }
 
+        if (prodotto.getStatoProdotto()!=StatoProdotto.BOZZA){
+            throw new IllegalArgumentException("Il prodotto non è può essere caricato sulla piattaforma");
+        }
         prodotto.inviaInRevisione();
         return prodottoRepository.save(prodotto);
     }

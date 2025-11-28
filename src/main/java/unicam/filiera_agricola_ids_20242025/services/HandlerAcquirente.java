@@ -82,12 +82,25 @@ public class HandlerAcquirente {
         CarrelloItem item;
 
         if (idProdotto != null) {
+
             Prodotto prodotto = prodottoRepository.findById(idProdotto)
                     .orElseThrow(() -> new RuntimeException("Prodotto non trovato"));
+
+            if (prodotto.getStatoProdotto() != StatoProdotto.APPROVATO) {
+                throw new IllegalStateException("Questo prodotto non è disponibile per l'acquisto");
+            }
+
             item = new CarrelloItem(prodotto, quantita);
+
         } else {
+
             Pacchetto pacchetto = pacchettoRepository.findById(idPacchetto)
                     .orElseThrow(() -> new RuntimeException("Pacchetto non trovato"));
+
+            if (pacchetto.getStatoProdotto() != StatoProdotto.APPROVATO) {
+                throw new IllegalStateException("Questo pacchetto non è disponibile per l'acquisto");
+            }
+
             item = new CarrelloItem(pacchetto, quantita);
         }
 
