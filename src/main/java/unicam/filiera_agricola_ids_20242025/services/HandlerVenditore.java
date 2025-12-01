@@ -72,8 +72,8 @@ public class HandlerVenditore implements Invitato {
         if (!(venditore instanceof Trasformatore trasformatore))
             throw new IllegalArgumentException("Non è un trasformatore");
 
-        ProdottoTrasformatore prodottoTrafsormatore = trasformatore.creaProdotto(nome, prezzo, descrizione, processo, produttoriAssociati);
-        return prodottoRepository.save(prodottoTrafsormatore);
+        ProdottoTrasformatore prodottoTrasformatore = trasformatore.creaProdotto(nome, prezzo, descrizione, processo, produttoriAssociati);
+        return prodottoRepository.save(prodottoTrasformatore);
     }
 
     // Creazione prodotto di un distributore di tipicità
@@ -98,7 +98,13 @@ public class HandlerVenditore implements Invitato {
 
         List<Prodotto> prodotti = prodottoRepository.findAllById(idProdotti);
         if (prodotti.size() != idProdotti.size()) {
-            throw new IllegalArgumentException("Alcuni prodotti non esistono.");
+            throw new IllegalArgumentException("Alcuni prodotti non esistono");
+        }
+
+        for (Prodotto p : prodotti) {
+            if (p.getVenditore().getIdVenditore() != idVenditore) {
+                throw new IllegalArgumentException("uno o più prodotti non appartengono al venditore");
+            }
         }
 
         Pacchetto pacchetto = distributore.creaPacchetto(nome, prezzo, descrizione, prodotti);
